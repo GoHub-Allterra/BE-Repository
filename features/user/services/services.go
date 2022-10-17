@@ -3,8 +3,9 @@ package services
 import (
 	"errors"
 	"gohub/features/user/domain"
-	"strings"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/labstack/gommon/log"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,16 +20,56 @@ func New(repo domain.Repository) domain.Service {
 	}
 }
 
-func (us *userService)UpdateUser(input domain.Core)(domain.Core, error) {
-	res, err := us.qry.Edit(input)
+func GenerateToken(id uint) string {
+	claim := &jwt.MapClaims{
+		"authorized": true,
+		"id":         id,
+		"exp":        time.Now().Add(time.Hour * 1).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+
+	str, err := token.SignedString([]byte("k0D3jW7"))
 	if err != nil {
 		log.Error(err.Error())
-		return domain.Core{}, err
+		return ""
 	}
+	return str
+}
+
+func (us *userService) Login(input domain.Core)(interface{}, error) {
+	res, err := us.qry.Login(input)
+	if err != nil {
+		log.Error(err.Error(), "username not found")
+		return nil, err
+	}
+
+	pass := domain.Core{Password: res.Password}
+	check := bcrypt.CompareHashAndPassword([]byte(pass.Password), []byte(input.Password))
+	if check != nil {
+		log.Error(check, "wrong password")
+		return nil, check
+	}
+	token := GenerateToken(res.ID)
+	return token, err
+}
+
+func (us *userService) UpdateUser(input domain.Core)(domain.Core, error) {
+	generate, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)	
+	if err != nil {
+		log.Error(err.Error())
+		return domain.Core{}, errors.New("cannot encrypt password")
+	}
+
+	input.Password = string(generate)
+	res, err := us.qry.Edit(input)
+		if err != nil {
+			return domain.Core{}, err
+		}
 	return res, nil
 }
 
-func (us *userService)DeleteUser(id uint)(domain.Core, error) {
+func (us *userService) DeleteUser(id uint)(domain.Core, error) {
 	res, err := us.qry.Delete(id)
 	if err != nil {
 		return domain.Core{}, err
@@ -36,29 +77,13 @@ func (us *userService)DeleteUser(id uint)(domain.Core, error) {
 	return res, err
 }
 
-// func GenerateToken(id uint) (string, error) {
-// 	claim := &jwt.MapClaims{
-// 		"authorized": true,
-// 		"id":         id,
-// 		"exp":        time.Now().Add(time.Hour * 1).Unix(),
-// 	}
-
-// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-
-// 	str, err := token.SignedString([]byte("rahasia"))
-// 	if err != nil {
-// 		log.Error(err.Error())
-// 		return "", errors.New("failed build token")
-// 	}
-// 	return str, nil
-// }
 
 func (us *userService) AddUser(newUser domain.Core) (domain.Core, error) {
 	generate, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 
 	if err != nil {
 		log.Error(err.Error())
-		return domain.Core{}, errors.New("cannot encript password")
+		return domain.Core{}, errors.New("cannot encrypt password")
 	}
 
 	newUser.Password = string(generate)
@@ -75,11 +100,7 @@ func (us *userService) Get(ID uint) (domain.Core, error) {
 	res, err := us.qry.Get(ID)
 	if err != nil {
 		log.Error(err.Error())
-		if strings.Contains(err.Error(), "table") {
-			return domain.Core{}, errors.New("database error")
-		} else if strings.Contains(err.Error(), "found") {
-			return domain.Core{}, errors.New("no data")
-		}
+		return domain.Core{}, errors.New("no data")
 	}
 
 	return res, nil

@@ -97,6 +97,27 @@ func (_m *Repository) Insert(newUser domain.Core) (domain.Core, error) {
 	return r0, r1
 }
 
+// Login provides a mock function with given fields: input
+func (_m *Repository) Login(input domain.Core) (domain.Core, error) {
+	ret := _m.Called(input)
+
+	var r0 domain.Core
+	if rf, ok := ret.Get(0).(func(domain.Core) domain.Core); ok {
+		r0 = rf(input)
+	} else {
+		r0 = ret.Get(0).(domain.Core)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(domain.Core) error); ok {
+		r1 = rf(input)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 type mockConstructorTestingTNewRepository interface {
 	mock.TestingT
 	Cleanup(func())

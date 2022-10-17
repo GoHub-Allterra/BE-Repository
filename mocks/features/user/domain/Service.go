@@ -76,6 +76,29 @@ func (_m *Service) Get(ID uint) (domain.Core, error) {
 	return r0, r1
 }
 
+// Login provides a mock function with given fields: input
+func (_m *Service) Login(input domain.Core) (interface{}, error) {
+	ret := _m.Called(input)
+
+	var r0 interface{}
+	if rf, ok := ret.Get(0).(func(domain.Core) interface{}); ok {
+		r0 = rf(input)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(interface{})
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(domain.Core) error); ok {
+		r1 = rf(input)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpdateUser provides a mock function with given fields: input
 func (_m *Service) UpdateUser(input domain.Core) (domain.Core, error) {
 	ret := _m.Called(input)

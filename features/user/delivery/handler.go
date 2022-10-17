@@ -20,7 +20,23 @@ func New(e *echo.Echo, srv domain.Service) {
 	e.GET("/user/:id", handler.GetUser()) // GET USER BY ID
 	e.DELETE("/user", handler.DeleteUser()) // DELETE USER BY ID
 	e.PUT("/user/update/:id", handler.UpdateUser()) // UPDATE USER BY ID
-	// e.POST("/login", handler.Login()) // LOGIN USER
+	e.POST("/login", handler.Login()) // LOGIN USER
+}
+
+func (us *userHandler) Login() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var input LoginFormat
+		if err := c.Bind(&input); err != nil {
+			return c.JSON(http.StatusBadRequest, FailResponse("cannot bind data"))
+		}
+
+		cnv := ToDomain(input)
+		res, err := us.srv.Login(cnv)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, FailResponse("login failed"))
+		}
+		return c.JSON(http.StatusOK, SuccessResponseWithData("login successful", res))
+	}
 }
 
 func (us *userHandler) UpdateUser() echo.HandlerFunc {
