@@ -34,20 +34,20 @@ func (_m *Repository) Delete(ID uint) (domain.Core, error) {
 	return r0, r1
 }
 
-// Edit provides a mock function with given fields: ID, input
-func (_m *Repository) Edit(ID uint, input domain.Core) (domain.Core, error) {
-	ret := _m.Called(ID, input)
+// Edit provides a mock function with given fields: input
+func (_m *Repository) Edit(input domain.Core) (domain.Core, error) {
+	ret := _m.Called(input)
 
 	var r0 domain.Core
-	if rf, ok := ret.Get(0).(func(uint, domain.Core) domain.Core); ok {
-		r0 = rf(ID, input)
+	if rf, ok := ret.Get(0).(func(domain.Core) domain.Core); ok {
+		r0 = rf(input)
 	} else {
 		r0 = ret.Get(0).(domain.Core)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(uint, domain.Core) error); ok {
-		r1 = rf(ID, input)
+	if rf, ok := ret.Get(1).(func(domain.Core) error); ok {
+		r1 = rf(input)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -76,29 +76,6 @@ func (_m *Repository) Get(ID uint) (domain.Core, error) {
 	return r0, r1
 }
 
-// GetAll provides a mock function with given fields:
-func (_m *Repository) GetAll() ([]domain.Core, error) {
-	ret := _m.Called()
-
-	var r0 []domain.Core
-	if rf, ok := ret.Get(0).(func() []domain.Core); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]domain.Core)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // Insert provides a mock function with given fields: newUser
 func (_m *Repository) Insert(newUser domain.Core) (domain.Core, error) {
 	ret := _m.Called(newUser)
@@ -113,6 +90,27 @@ func (_m *Repository) Insert(newUser domain.Core) (domain.Core, error) {
 	var r1 error
 	if rf, ok := ret.Get(1).(func(domain.Core) error); ok {
 		r1 = rf(newUser)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Login provides a mock function with given fields: input
+func (_m *Repository) Login(input domain.Core) (domain.Core, error) {
+	ret := _m.Called(input)
+
+	var r0 domain.Core
+	if rf, ok := ret.Get(0).(func(domain.Core) domain.Core); ok {
+		r0 = rf(input)
+	} else {
+		r0 = ret.Get(0).(domain.Core)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(domain.Core) error); ok {
+		r1 = rf(input)
 	} else {
 		r1 = ret.Error(1)
 	}
