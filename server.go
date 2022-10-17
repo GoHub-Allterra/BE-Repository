@@ -24,5 +24,5 @@ func main() {
 
 	delivery.New(e, uService)
 	
-	e.Logger.Fatal(e.Start(":8001"))
+	e.Logger.Fatal(e.Start(":80"))
 }

@@ -17,7 +17,7 @@ func InitDB(c *config.AppConfig) *gorm.DB {
 	// 	c.DBName,
 	// )
 
-	str := "root:@tcp(mysql:3308)/gohub?charset=utf8mb4&parseTime=True&loc=Local"
+	str := "root:@tcp(mysql:3306)/gohub?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(str), &gorm.Config{})
 	if err != nil {
