@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/labstack/gommon/log"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type userService struct {
@@ -18,8 +19,8 @@ func New(repo domain.Repository) domain.Service {
 	}
 }
 
-func (us *userService)UpdateUser(id uint, input domain.Core)(domain.Core, error) {
-	res, err := us.qry.Edit(id, input)
+func (us *userService)UpdateUser(input domain.Core)(domain.Core, error) {
+	res, err := us.qry.Edit(input)
 	if err != nil {
 		log.Error(err.Error())
 		return domain.Core{}, err
@@ -53,14 +54,14 @@ func (us *userService)DeleteUser(id uint)(domain.Core, error) {
 // }
 
 func (us *userService) AddUser(newUser domain.Core) (domain.Core, error) {
-	// generate, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	generate, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
 
-	// if err != nil {
-	// 	log.Error(err.Error())
-	// 	return domain.Core{}, errors.New("cannot encript password")
-	// }
+	if err != nil {
+		log.Error(err.Error())
+		return domain.Core{}, errors.New("cannot encript password")
+	}
 
-	// newUser.Password = string(generate)
+	newUser.Password = string(generate)
 	res, err := us.qry.Insert(newUser)
 
 	if err != nil {
@@ -84,21 +85,21 @@ func (us *userService) Get(ID uint) (domain.Core, error) {
 	return res, nil
 }
 
-func (us *userService) ShowAllUser() ([]domain.Core, error) {
-	res, err := us.qry.GetAll()
-	if err != nil {
-		log.Error(err.Error())
-		if strings.Contains(err.Error(), "table") {
-			return nil, errors.New("database error")
-		} else if strings.Contains(err.Error(), "found") {
-			return nil, errors.New("no data")
-		}
-	}
+// func (us *userService) ShowAllUser() ([]domain.Core, error) {
+// 	res, err := us.qry.GetAll()
+// 	if err != nil {
+// 		log.Error(err.Error())
+// 		if strings.Contains(err.Error(), "table") {
+// 			return nil, errors.New("database error")
+// 		} else if strings.Contains(err.Error(), "found") {
+// 			return nil, errors.New("no data")
+// 		}
+// 	}
 
-	if len(res) == 0 {
-		log.Info("no data")
-		return nil, errors.New("no data")
-	}
+// 	if len(res) == 0 {
+// 		log.Info("no data")
+// 		return nil, errors.New("no data")
+// 	}
 
-	return res, nil
-}
+// 	return res, nil
+// }

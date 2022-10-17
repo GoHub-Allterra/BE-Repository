@@ -76,43 +76,20 @@ func (_m *Service) Get(ID uint) (domain.Core, error) {
 	return r0, r1
 }
 
-// ShowAllUser provides a mock function with given fields:
-func (_m *Service) ShowAllUser() ([]domain.Core, error) {
-	ret := _m.Called()
-
-	var r0 []domain.Core
-	if rf, ok := ret.Get(0).(func() []domain.Core); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]domain.Core)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// UpdateUser provides a mock function with given fields: ID, input
-func (_m *Service) UpdateUser(ID uint, input domain.Core) (domain.Core, error) {
-	ret := _m.Called(ID, input)
+// UpdateUser provides a mock function with given fields: input
+func (_m *Service) UpdateUser(input domain.Core) (domain.Core, error) {
+	ret := _m.Called(input)
 
 	var r0 domain.Core
-	if rf, ok := ret.Get(0).(func(uint, domain.Core) domain.Core); ok {
-		r0 = rf(ID, input)
+	if rf, ok := ret.Get(0).(func(domain.Core) domain.Core); ok {
+		r0 = rf(input)
 	} else {
 		r0 = ret.Get(0).(domain.Core)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(uint, domain.Core) error); ok {
-		r1 = rf(ID, input)
+	if rf, ok := ret.Get(1).(func(domain.Core) error); ok {
+		r1 = rf(input)
 	} else {
 		r1 = ret.Error(1)
 	}

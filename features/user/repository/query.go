@@ -35,10 +35,11 @@ func (rq *repoQuery) Insert(newUser domain.Core) (domain.Core, error) {
 	newUser = ToDomain(cnv)
 	return newUser, nil
 }
-func (rq *repoQuery) Edit(id uint, input domain.Core) (domain.Core, error) {
+func (rq *repoQuery) Edit(input domain.Core) (domain.Core, error) {
 	var cnv User
 	cnv = FromDomain(input)
-	if err := rq.db.Where("id = ?", id).Updates(User{Nama: input.Nama, HP: input.HP, Password: input.Password}).Error; err != nil {
+	if err := rq.db.Where("id = ?", 11).Updates(User{Name: input.Name, HP: input.HP, Password: input.Password, Username: input.Username,
+			Profile_picture: input.Profile_picture, Email: input.Email, Bio: input.Bio,}).Error; err != nil {
 		return domain.Core{}, err
 	}
 	// selesai dari DB
@@ -54,19 +55,10 @@ func (rq *repoQuery) Get(ID uint) (domain.Core, error) {
 	res := ToDomain(resQry)
 	return res, nil
 }
-func (rq *repoQuery) GetAll() ([]domain.Core, error) {
-	var resQry []User
-	if err := rq.db.Find(&resQry).Error; err != nil {
-		return nil, err
-	}
-	// selesai dari DB
-	res := ToDomainArray(resQry)
-	return res, nil
-}
 
 func (rq *repoQuery) Login(user domain.Core) (domain.Core, error) {
 	var dest User
-	if err := rq.db.First(&dest, "nama = ? AND password = ?", user.Nama, user.Password).Error ;err != nil {
+	if err := rq.db.First(&dest, "username = ? AND password = ?", user.Username, user.Password).Error ;err != nil {
 		return domain.Core{}, err
 	}
 
@@ -74,3 +66,13 @@ func (rq *repoQuery) Login(user domain.Core) (domain.Core, error) {
 	return res, nil
 	
 }
+
+// func (rq *repoQuery) GetAll() ([]domain.Core, error) {
+// 	var resQry []User
+// 	if err := rq.db.Find(&resQry).Error; err != nil {
+// 		return nil, err
+// 	}
+// 	// selesai dari DB
+// 	res := ToDomainArray(resQry)
+// 	return res, nil
+// }
