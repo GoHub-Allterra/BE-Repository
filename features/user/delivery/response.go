@@ -32,14 +32,21 @@ type GetResponse struct{
 	Profile_picture string `json:"profile_picture"`
 }
 
+type LoginResponse struct{
+	ID uint `json:"id"`
+	Name string `json:"name"`
+	Token string `json:"token"`
+}
+
 func ToResponse(core interface{}, code string) interface{} {
 	var res interface{}
 	switch code {
 	case "get":
 		cnv := core.(domain.Core)
 		res = GetResponse{ID: cnv.ID, Name: cnv.Name, Username: cnv.Username, Email: cnv.Name, HP: cnv.HP, Bio: cnv.Bio, Profile_picture: cnv.Profile_picture}
+	case "login":
+		cnv := core.(domain.Core)
+		res = LoginResponse{ID: cnv.ID, Name: cnv.Name, Token: cnv.Token}
 	}
-
-
 	return res
 }

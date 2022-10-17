@@ -16,7 +16,7 @@ func TestLogin(t *testing.T) {
 		repo.On("Login", mock.Anything).Return(domain.Core{Password: "$2a$10$szpOHiZl0Uvv.Wr1hTAwKeSbTb2E2igPNzPHqW.C0u5xMmLRomaYS "}, nil).Once()
 		srv := New(repo)
 		input := domain.Core{Username: "fatur", Password: "fatur123"}
-		res, err := srv.Login(input)
+		res, _, err := srv.Login(input)
 		assert.NotEmpty(t, res)
 		assert.Nil(t, err)
 		repo.AssertExpectations(t)
@@ -25,7 +25,7 @@ func TestLogin(t *testing.T) {
 		repo.On("Login", mock.Anything).Return(domain.Core{Password: "asgfasg"}, errors.New("wrong password")).Once()
 		srv := New(repo)
 		input := domain.Core{Username: "fatur", Password: "fatur123"}
-		res, err := srv.Login(input)
+		res, _, err := srv.Login(input)
 		assert.Empty(t, res)
 		assert.ErrorContains(t, err, "wrong password")
 		repo.AssertExpectations(t)
@@ -34,7 +34,7 @@ func TestLogin(t *testing.T) {
 		repo.On("Login", mock.Anything).Return(domain.Core{Password: "asgfasg"}, errors.New("username not found")).Once()
 		srv := New(repo)
 		input := domain.Core{Username: "fatur", Password: "fatur123"}
-		res, err := srv.Login(input)
+		res, _, err := srv.Login(input)
 		assert.Empty(t, res)
 		assert.EqualError(t, err, "username not found")
 		repo.AssertExpectations(t)

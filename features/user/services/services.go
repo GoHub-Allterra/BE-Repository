@@ -37,21 +37,22 @@ func GenerateToken(id uint) string {
 	return str
 }
 
-func (us *userService) Login(input domain.Core)(interface{}, error) {
+func (us *userService) Login(input domain.Core) (domain.Core, string, error) {
 	res, err := us.qry.Login(input)
 	if err != nil {
 		log.Error(err.Error(), "username not found")
-		return nil, err
+		return domain.Core{}, "", err
 	}
 
 	pass := domain.Core{Password: res.Password}
 	check := bcrypt.CompareHashAndPassword([]byte(pass.Password), []byte(input.Password))
 	if check != nil {
 		log.Error(check, "wrong password")
-		return nil, check
+		return domain.Core{}, "",check
 	}
 	token := GenerateToken(res.ID)
-	return token, err
+
+	return res, token, err
 }
 
 func (us *userService) UpdateUser(input domain.Core)(domain.Core, error) {

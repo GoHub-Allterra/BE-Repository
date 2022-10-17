@@ -1,13 +1,12 @@
 package delivery
 
 import (
-	"net/http"
 	"gohub/features/user/domain"
+	"net/http"
 	"strconv"
 
-	// "strconv"
-
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type userHandler struct {
@@ -16,11 +15,11 @@ type userHandler struct {
 
 func New(e *echo.Echo, srv domain.Service) {
 	handler := userHandler{srv: srv}
-	e.POST("/user", handler.AddUser())    // REGISTER USER
-	e.GET("/user/:id", handler.GetUser()) // GET USER BY ID
-	e.DELETE("/user", handler.DeleteUser()) // DELETE USER BY ID
-	e.PUT("/user/update/:id", handler.UpdateUser()) // UPDATE USER BY ID
-	e.POST("/login", handler.Login()) // LOGIN USER
+	e.POST("/login", handler.Login())                                                  // LOGIN USER
+	e.POST("/register", handler.AddUser())                                             // REGISTER USER
+	e.GET("/user/:id", handler.GetUser(), middleware.JWT([]byte("k0D3jW7")))           // GET USER BY ID
+	e.DELETE("/user/:id", handler.DeleteUser(), middleware.JWT([]byte("k0D3jW7")))     // DELETE USER BY ID
+	e.PUT("/user/update/:id", handler.UpdateUser(), middleware.JWT([]byte("k0D3jW7"))) // UPDATE USER BY ID
 }
 
 func (us *userHandler) Login() echo.HandlerFunc {
@@ -31,11 +30,12 @@ func (us *userHandler) Login() echo.HandlerFunc {
 		}
 
 		cnv := ToDomain(input)
-		res, err := us.srv.Login(cnv)
+		res, token, err := us.srv.Login(cnv)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, FailResponse("login failed"))
 		}
-		return c.JSON(http.StatusOK, SuccessResponseWithData("login successful", res))
+		res.Token = token
+		return c.JSON(http.StatusOK, SuccessResponseWithData("login successful", ToResponse(res, "login")))
 	}
 }
 
@@ -47,7 +47,7 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, FailResponse("cannot bind input"))
 		}
 
-		cnvID, err:= strconv.Atoi(id)
+		cnvID, err := strconv.Atoi(id)
 		fixID := uint(cnvID)
 		input.ID = fixID
 		cnv := ToDomain(input)
@@ -61,7 +61,7 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 
 func (us *userHandler) DeleteUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.QueryParam("id")
+		id := c.Param("id")
 		cnvId, _ := strconv.Atoi(id)
 		toUint := uint(cnvId)
 		_, err := us.srv.DeleteUser(toUint)

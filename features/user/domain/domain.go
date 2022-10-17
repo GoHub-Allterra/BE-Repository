@@ -11,6 +11,7 @@ type Core struct {
 	Profile_picture string
 	HP              string
 	Bio             string
+	Token           string
 }
 
 type Repository interface { // Data /Repository (berhubungan dg DB)
@@ -28,5 +29,5 @@ type Service interface { // Bisnis logic
 	// ShowAllUser() ([]Core, error)
 	DeleteUser(ID uint) (Core, error)
 	UpdateUser(input Core) (Core, error)
-	Login(input Core) (interface{}, error)
+	Login(input Core) (Core, string, error)
 }
