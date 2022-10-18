@@ -8,9 +8,11 @@ import (
 
 type Post struct {
 	gorm.Model
-	User_ID uint   `json:"user_id" form:"user_id"`
-	Images  string `json:"images" form:"images"`
-	Caption string `json:"caption" form:"caption"`
+	User_ID    uint   `json:"user_id" form:"user_id"`
+	Images     string `json:"images" form:"images"`
+	Caption    string `json:"caption" form:"caption"`
+	Created_At string `json:"created_at" form:"created_at"`
+	Updated_At string `json:"updated_at" form:"updated_at"`
 }
 
 func (p *Post) ToDomain() domain.Post {
