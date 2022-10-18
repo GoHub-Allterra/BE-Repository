@@ -10,8 +10,8 @@ type GetAllPost struct {
 	Content  string
 	// Profile_picture_path string
 	// Caption    string
-	Created_At time.Time
-	Updated_At time.Time
+	// Created_At time.Time `json:"created_at" form:"created_at"`
+	// Updated_At time.Time `json:"updated_at" form:"updated_at"`
 	// Post_Images          []string
 }
 

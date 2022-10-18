@@ -61,3 +61,28 @@ func (pd *postData) GetById(param int) (domain.Post, error) {
 	postId := dataId.toPostUser()
 	return postId, nil
 }
+func (pd *postData) PutPost(param, token int, dataUpdate domain.Post) (int, error) {
+	var dataCheck Post
+	tx := pd.db.First(&dataCheck, param)
+	if tx.Error != nil {
+		return -1, tx.Error
+	}
+	postId := dataCheck.toPostUser()
+
+	if postId.User_ID == uint(token) {
+		var data Post
+		data.Caption = dataUpdate.Caption
+		data.Images = dataUpdate.Images
+
+		var posts Post
+		posts.ID = dataUpdate.ID
+		txUpdateId := pd.db.Model(&posts).Updates(data)
+		if txUpdateId.Error != nil {
+			return -1, txUpdateId.Error
+		}
+		var err error
+		return int(txUpdateId.RowsAffected), err
+	} else {
+		return -1, errors.New("not have access")
+	}
+}
