@@ -31,3 +31,26 @@ func ToEntity(data domain.Post) Post {
 		Images:  data.Images,
 	}
 }
+
+func (dataPost *Post) toPostUser() domain.Post {
+
+	dataBookCore := domain.Post{
+		ID:         dataPost.ID,
+		User_ID:    dataPost.User_ID,
+		Images:     dataPost.Images,
+		Caption:    dataPost.Caption,
+		Created_At: dataPost.CreatedAt,
+		Updated_At: dataPost.UpdatedAt,
+	}
+
+	return dataBookCore
+
+}
+
+func toPostList(data []Post) []domain.Post {
+	var dataCore []domain.Post
+	for i := 0; i < len(data); i++ {
+		dataCore = append(dataCore, data[i].toPostUser())
+	}
+	return dataCore
+}
