@@ -2,6 +2,7 @@ package repository
 
 import (
 	"gohub/features/user/domain"
+	user "gohub/features/user/domain"
 
 	"gorm.io/gorm"
 )
@@ -15,6 +16,27 @@ type User struct {
 	Images   string
 	HP       string
 	Bio      string
+	Post     []Post
+}
+
+type Post struct {
+	gorm.Model
+	UserID  uint
+	Images  string
+	Content string
+}
+
+func (dataPostUser *Post) toPostUser() user.PostCore {
+
+	dataUser := user.PostCore{
+		ID:      dataPostUser.ID,
+		UserID:  dataPostUser.UserID,
+		Images:  dataPostUser.Images,
+		Content: dataPostUser.Content,
+	}
+
+	return dataUser
+
 }
 
 func FromDomain(du domain.Core) User {
