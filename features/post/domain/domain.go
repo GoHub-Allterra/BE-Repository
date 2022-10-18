@@ -5,13 +5,13 @@ import (
 )
 
 type Post struct {
-	ID          uint
-	User_ID     uint
-	Caption     string `json:"caption" form:"caption"`
-	Images      string `json:"images" form:"images"`
-	Created_At  time.Time
-	Updated_At  time.Time
-	Post_images []string `json:"post_images" form:"post_images"`
+	ID         uint
+	User_ID    uint   `json:"user_id" form:"user_id"`
+	Caption    string `json:"caption" form:"caption"`
+	Images     string `json:"images" form:"images"`
+	Created_At time.Time
+	Updated_At time.Time
+	// Post_images []string `json:"post_images" form:"post_images"`
 }
 
 type User struct {
@@ -33,7 +33,7 @@ type Comment struct {
 }
 
 type PostUsecase interface {
-	// GetAllPosts() ([]Post, []User, [][]string, error)
+	GetAllPosts() (data []Post, err error)
 	AddPost(data Post, token int) (int, error)
 	// AddPostImages(post []string, postID uint) error
 	// GetMyPosts(id uint) ([]Post, User, [][]string, error)
@@ -43,7 +43,7 @@ type PostUsecase interface {
 }
 
 type PostData interface {
-	// GetAll() ([]Post, []User, [][]string, error)
+	GetAll() (data []Post, err error)
 	Insert(data Post, token int) (int, error)
 	// InsertPostImages(post []string, postID uint) error
 	// GetAllPostsByID(id uint) ([]Post, User, [][]string, error)

@@ -38,3 +38,15 @@ func (pd *postData) Insert(data domain.Post, token int) (int, error) {
 	return int(tx.RowsAffected), nil
 
 }
+
+func (pd *postData) GetAll() ([]domain.Post, error) {
+	var dataPost []Post
+	tx := pd.db.Find(&dataPost)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	dataPostUser := toPostList(dataPost)
+
+	return dataPostUser, nil
+}

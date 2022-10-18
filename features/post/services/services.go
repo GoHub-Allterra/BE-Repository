@@ -15,11 +15,6 @@ func New(pd domain.PostData) domain.PostUsecase {
 	}
 }
 
-// func (ps *postUsecase) GetAllPosts() ([]domain.Post, []domain.User, [][]string, error) {
-// 	data, userdata, post_images, err := ps.postData.GetAll()
-// 	return data, userdata, post_images, err
-// }
-
 func (ps *postUsecase) AddPost(data domain.Post, token int) (int, error) {
 	if data.Caption != "" {
 
@@ -34,27 +29,13 @@ func (ps *postUsecase) AddPost(data domain.Post, token int) (int, error) {
 	}
 }
 
-// func (ps *postUsecase) AddPostImages(images []string, postID uint) error {
-// 	err := ps.postData.InsertPostImages(images, postID)
-// 	return err
-// }
-
-// func (ps *postUsecase) GetMyPosts(id uint) ([]domain.Post, domain.User, [][]string, error) {
-// 	posts, userdata, postimages, err := ps.postData.GetAllPostsByID(id)
-// 	return posts, userdata, postimages, err
-// }
-
-// func (ps *postUsecase) GetSpecificPost(id uint) (domain.Post, domain.User, []string, []domain.Comment, []domain.User, error) {
-// 	post, userdata, postimages, comments, commentUserData, err := ps.postData.GetPostByID(id)
-// 	return post, userdata, postimages, comments, commentUserData, err
-// }
-
-// func (ps *postUsecase) UpdatePost(id uint, updateData domain.Post) (domain.Post, error) {
-// 	data, err := ps.postData.Update(id, updateData)
-// 	return data, err
-// }
-
-// func (ps *postUsecase) DeletePost(id uint, userID uint) error {
-// 	err := ps.postData.Delete(id, userID)
-// 	return err
-// }
+func (ps *postUsecase) GetAllPosts() ([]domain.Post, error) {
+	dataAll, err := ps.postData.GetAll()
+	if err != nil {
+		return nil, errors.New("failed get all data")
+	} else if len(dataAll) == 0 {
+		return nil, errors.New("data is still empty")
+	} else {
+		return dataAll, nil
+	}
+}
