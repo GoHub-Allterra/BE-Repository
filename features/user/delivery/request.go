@@ -26,12 +26,6 @@ type LoginFormat struct {
 	Usename  string `json:"username" form:"username"`
 	Password string `json:"password" form:"password"`
 }
-
-type AddPhotosFormat struct {
-	ID     uint   `form:"id"`
-	Images string `form:"images"`
-}
-
 type GetId struct {
 	id uint `param:"id"`
 }
@@ -46,7 +40,7 @@ func ToDomain(i interface{}) domain.Core {
 		return domain.Core{ID: cnv.id}
 	case UpdateFormat:
 		cnv := i.(UpdateFormat)
-		return domain.Core{Name: cnv.Name, Username: cnv.Username, Password: cnv.Password, Images: cnv.Images, Email: cnv.Email, HP: cnv.HP, Bio: cnv.Bio}
+		return domain.Core{ID: cnv.ID,Name: cnv.Name, Username: cnv.Username, Password: cnv.Password, Images: cnv.Images, Email: cnv.Email, HP: cnv.HP, Bio: cnv.Bio}
 	case LoginFormat:
 		cnv := i.(LoginFormat)
 		return domain.Core{Username: cnv.Usename, Password: cnv.Password}

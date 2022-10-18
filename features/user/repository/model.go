@@ -22,6 +22,7 @@ func FromDomain(du domain.Core) User {
 		Model:    gorm.Model{ID: du.ID},
 		Name:     du.Name,
 		Username: du.Username,
+		Email:    du.Email,
 		Password: du.Password,
 		Images:   du.Images,
 		HP:       du.HP,

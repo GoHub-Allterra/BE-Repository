@@ -3,7 +3,6 @@ package repository
 import (
 	"gohub/features/user/domain"
 	"log"
-
 	"gorm.io/gorm"
 )
 
@@ -15,17 +14,6 @@ func New(dbConn *gorm.DB) domain.Repository {
 	return &repoQuery{
 		db: dbConn,
 	}
-}
-
-func (rq *repoQuery) AddPhotos(input domain.Core) (domain.Core, error) {
-	var cnv User
-	cnv = FromDomain(input)
-	if  err := rq.db.Model(&cnv).Where("id = ?", input.ID).Update("images", input.Images).Error; err != nil {
-		log.Fatal("error update data")
-		return domain.Core{}, err
-	}
-	input = ToDomain(cnv)
-	return input, nil
 }
 
 func (rq *repoQuery) Login(input domain.Core) (domain.Core, error) {
@@ -60,8 +48,8 @@ func (rq *repoQuery) Insert(newUser domain.Core) (domain.Core, error) {
 func (rq *repoQuery) Edit(input domain.Core) (domain.Core, error) {
 	var cnv User
 	cnv = FromDomain(input)
-	if err := rq.db.Where("id = ?", 11).Updates(User{Name: input.Name, HP: input.HP, Password: input.Password, Username: input.Username,
-			Email: input.Email, Bio: input.Bio,}).Error; err != nil {
+	if err := rq.db.Model(&cnv).Where("id = ?", input.ID).Updates(User{Name:cnv.Name, HP:cnv.HP, Password:cnv.Password, Username:cnv.Username,
+			Email: cnv.Email, Bio: cnv.Bio, Images:cnv.Images,}).Error; err != nil {
 		return domain.Core{}, err
 	}
 	// selesai dari DB
