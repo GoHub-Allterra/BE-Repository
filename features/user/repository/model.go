@@ -8,36 +8,36 @@ import (
 
 type User struct {
 	gorm.Model
-	Name            string
-	Username        string
-	Email           string
-	Password        string
-	Profile_picture string
-	HP              string
-	Bio             string
+	Name     string
+	Username string
+	Email    string
+	Password string
+	Images   string
+	HP       string
+	Bio      string
 }
 
 func FromDomain(du domain.Core) User {
 	return User{
-		Model:           gorm.Model{ID: du.ID},
-		Name:            du.Name,
-		Username:        du.Username,
-		Password:        du.Password,
-		Profile_picture: du.Profile_picture,
-		HP:              du.Profile_picture,
-		Bio:             du.Bio,
+		Model:    gorm.Model{ID: du.ID},
+		Name:     du.Name,
+		Username: du.Username,
+		Password: du.Password,
+		Images:   du.Images,
+		HP:       du.HP,
+		Bio:      du.Bio,
 	}
 }
 
 func ToDomain(u User) domain.Core {
 	return domain.Core{
-		ID:              u.ID,
-		Name:            u.Name,
-		Username:        u.Username,
-		Password:        u.Password,
-		Profile_picture: u.Profile_picture,
-		HP:              u.HP,
-		Bio:             u.Bio,
+		ID:       u.ID,
+		Name:     u.Name,
+		Username: u.Username,
+		Password: u.Password,
+		Images:   u.Images,
+		HP:       u.HP,
+		Bio:      u.Bio,
 	}
 }
 

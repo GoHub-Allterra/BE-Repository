@@ -4,7 +4,6 @@ import (
 	"gohub/features/user/domain"
 	"net/http"
 	"strconv"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -19,7 +18,7 @@ func New(e *echo.Echo, srv domain.Service) {
 	e.POST("/register", handler.AddUser())                                             // REGISTER USER
 	e.GET("/user/:id", handler.GetUser(), middleware.JWT([]byte("k0D3jW7")))           // GET USER BY ID
 	e.DELETE("/user/:id", handler.DeleteUser(), middleware.JWT([]byte("k0D3jW7")))     // DELETE USER BY ID
-	e.PUT("/user/update/:id", handler.UpdateUser(), middleware.JWT([]byte("k0D3jW7"))) // UPDATE USER BY ID
+	e.PUT("/user/update/:id", handler.UpdateUser(), middleware.JWT([]byte("k0D3jW7"))) // UPDATE USER BY ID                                  // ADD PROFILE PHOTOS
 }
 
 func (us *userHandler) Login() echo.HandlerFunc {

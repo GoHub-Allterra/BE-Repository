@@ -22,8 +22,13 @@ type UpdateFormat struct {
 }
 
 type LoginFormat struct {
-	Usename string `json:"username"`
+	Usename  string `json:"username"`
 	Password string `json:"password"`
+}
+
+type AddPhotosFormat struct {
+	ID     uint   `form:"id"`
+	Images string `form:"images"`
 }
 
 type GetId struct {
