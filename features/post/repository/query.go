@@ -50,3 +50,14 @@ func (pd *postData) GetAll() ([]domain.Post, error) {
 
 	return dataPostUser, nil
 }
+
+func (pd *postData) GetById(param int) (domain.Post, error) {
+	var dataId Post
+	tx := pd.db.First(&dataId, param)
+	if tx.Error != nil {
+		return domain.Post{}, tx.Error
+	}
+
+	postId := dataId.toPostUser()
+	return postId, nil
+}

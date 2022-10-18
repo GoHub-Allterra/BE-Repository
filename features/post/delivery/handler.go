@@ -5,6 +5,7 @@ import (
 	"gohub/features/post/domain"
 	"gohub/middlewares"
 	"net/http"
+	"strconv"
 
 	// "github.com/labstack/echo/middleware"
 	"github.com/labstack/echo/v4"
@@ -23,7 +24,30 @@ func New(e *echo.Echo, ps domain.PostUsecase) {
 
 	e.POST("/myposts", handler.AddPosting(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.GET("/posts", handler.SelectAll())
+	e.GET("/posts/:id", handler.SelectId())
 
+}
+
+func (ph *postHandler) SelectId() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		idConv, _ := strconv.Atoi(id)
+		if idConv < 0 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"message": "param must be number",
+			})
+		}
+		res, resErr := ph.PostUsecase.SelectById(idConv)
+		if resErr != nil {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"message": "failed get by id",
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "succes get by id",
+			"data":    res,
+		})
+	}
 }
 
 func (ph *postHandler) SelectAll() echo.HandlerFunc {

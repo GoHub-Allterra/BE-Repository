@@ -39,3 +39,14 @@ func (ps *postUsecase) GetAllPosts() ([]domain.Post, error) {
 		return dataAll, nil
 	}
 }
+
+func (ps *postUsecase) SelectById(param int) (domain.Post, error) {
+
+	dataId, err := ps.postData.GetById(param)
+	if err != nil {
+		return domain.Post{}, err
+	}
+
+	return dataId, nil
+
+}
