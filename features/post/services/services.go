@@ -15,6 +15,15 @@ func New(pd domain.PostData) domain.PostUsecase {
 	}
 }
 
+func (ps *postUsecase) UpdatePost(param, token int, data domain.Post) (int, error) {
+	row, err := ps.postData.PutPost(param, token, data)
+	if err != nil || row == 0 {
+		return -1, err
+	}
+
+	return 1, nil
+}
+
 func (ps *postUsecase) AddPost(data domain.Post, token int) (int, error) {
 	if data.Caption != "" {
 

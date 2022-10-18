@@ -25,7 +25,47 @@ func New(e *echo.Echo, ps domain.PostUsecase) {
 	e.POST("/myposts", handler.AddPosting(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.GET("/posts", handler.SelectAll())
 	e.GET("/posts/:id", handler.SelectId())
+	e.PUT("/posts/:id", handler.PutId(), middleware.JWT([]byte(config.JWT_SECRET)))
 
+}
+
+func (ph *postHandler) PutId() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		idToken := middlewares.ExtractToken(c)
+		id := c.Param("id")
+		idConv, _ := strconv.Atoi(id)
+		if idConv < 0 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"message": "param must be number",
+			})
+		}
+
+		var update Request
+		err := c.Bind(&update)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "failed bind data",
+			})
+		}
+		var insert domain.Post
+		if update.Caption != "" {
+			insert.Caption = update.Caption
+		}
+		if update.Images != "" {
+			insert.Images = update.Images
+		}
+		insert.ID = uint(idConv)
+		row, _ := ph.PostUsecase.UpdatePost(idConv, idToken, insert)
+		if row == 1 {
+			return c.JSON(http.StatusOK, map[string]interface{}{
+				"message": "success update data",
+			})
+		} else {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"message": "failed update data",
+			})
+		}
+	}
 }
 
 func (ph *postHandler) SelectId() echo.HandlerFunc {
