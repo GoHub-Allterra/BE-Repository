@@ -21,20 +21,20 @@ func FailResponse(msg string) map[string]string {
 	}
 }
 
-type GetResponse struct{
-	ID uint `json:"id"`
-	Name string `json:"name"`
+type GetResponse struct {
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
 	Username string `json:"username"`
 	Password string `json:"Password"`
-	Email string `json:"Email"`
-	HP string `json:"hp"`
-	Bio string `json:"bio"`
-	Profile_picture string `json:"profile_picture"`
+	Email    string `json:"Email"`
+	HP       string `json:"hp"`
+	Bio      string `json:"bio"`
+	Images   string `json:"profile_picture"`
 }
 
-type LoginResponse struct{
-	ID uint `json:"id"`
-	Name string `json:"name"`
+type LoginResponse struct {
+	ID    uint   `json:"id"`
+	Name  string `json:"name"`
 	Token string `json:"token"`
 }
 
@@ -43,7 +43,7 @@ func ToResponse(core interface{}, code string) interface{} {
 	switch code {
 	case "get":
 		cnv := core.(domain.Core)
-		res = GetResponse{ID: cnv.ID, Name: cnv.Name, Username: cnv.Username, Email: cnv.Name, HP: cnv.HP, Bio: cnv.Bio, Profile_picture: cnv.Profile_picture}
+		res = GetResponse{ID: cnv.ID, Name: cnv.Name, Username: cnv.Username, Email: cnv.Name, HP: cnv.HP, Bio: cnv.Bio, Images: cnv.Images}
 	case "login":
 		cnv := core.(domain.Core)
 		res = LoginResponse{ID: cnv.ID, Name: cnv.Name, Token: cnv.Token}
