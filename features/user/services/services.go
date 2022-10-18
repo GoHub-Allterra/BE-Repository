@@ -18,13 +18,6 @@ func New(repo domain.Repository) domain.Service {
 	}
 }
 
-func (us *userService) AddPhotos(input domain.Core) (domain.Core, error) {
-	res, err := us.qry.AddPhotos(input)
-	if err != nil {
-		return domain.Core{}, err
-	}
-	return res, err
-}
 
 func (us *userService) Login(input domain.Core) (domain.Core, string, error) {
 	res, err := us.qry.Login(input)
@@ -36,7 +29,7 @@ func (us *userService) Login(input domain.Core) (domain.Core, string, error) {
 	pass := domain.Core{Password: res.Password}
 	check := bcrypt.CompareHashAndPassword([]byte(pass.Password), []byte(input.Password))
 	if check != nil {
-		log.Error(check, "wrong password")
+		log.Error(check, " wrong password")
 		return domain.Core{}, "", check
 	}
 	token, err := middlewares.CreateToken(int(res.ID))
@@ -45,13 +38,15 @@ func (us *userService) Login(input domain.Core) (domain.Core, string, error) {
 }
 
 func (us *userService) UpdateUser(input domain.Core) (domain.Core, error) {
-	generate, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Error(err.Error())
-		return domain.Core{}, errors.New("cannot encrypt password")
+	if input.Password != ""{
+		generate, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+		if err != nil {
+			log.Error(err.Error())
+			return domain.Core{}, errors.New("cannot encrypt password")
+		}
+		input.Password = string(generate)
 	}
-
-	input.Password = string(generate)
+	
 	res, err := us.qry.Edit(input)
 	if err != nil {
 		return domain.Core{}, err

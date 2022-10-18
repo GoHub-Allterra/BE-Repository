@@ -20,7 +20,6 @@ type Repository interface { // Data /Repository (berhubungan dg DB)
 	Delete(ID uint) (Core, error)
 	Edit(input Core) (Core, error)
 	Login(input Core) (Core, error)
-	AddPhotos(input Core) (Core, error)
 }
 
 type Service interface { // Bisnis logic
@@ -29,5 +28,4 @@ type Service interface { // Bisnis logic
 	DeleteUser(ID uint) (Core, error)
 	UpdateUser(input Core) (Core, error)
 	Login(input Core) (Core, string, error)
-	AddPhotos(input Core) (Core,error)
 }
