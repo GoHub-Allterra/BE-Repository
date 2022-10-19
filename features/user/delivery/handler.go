@@ -1,18 +1,12 @@
 package delivery
 
 import (
-	"bytes"
 	"gohub/config"
 	"gohub/features/user/domain"
 	"gohub/middlewares"
 	"net/http"
-	"os"
 
 	"strconv"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -33,37 +27,6 @@ func New(e *echo.Echo, srv domain.Service) {
 	e.PUT("/users/update", handler.UpdateUser(), middleware.JWT([]byte(config.JWT_SECRET))) // UPDATE USER BY ID                                  // ADD PROFILE PHOTOS
 }
 
-const (
-    AWS_S3_REGION = "ap-southeast-1"
-    AWS_S3_BUCKET = "gohubalta"
-)
-
-func uploadFile(session *session.Session, uploadFileDir string) error {
-	var c echo.Context
-	file, err := c.FormFile("images")
-    upFile, err := os.Open(file.Filename)
-    if err != nil {
-        return err
-    }
-    defer upFile.Close()
-    
-    upFileInfo, _ := upFile.Stat()
-    var fileSize int64 = upFileInfo.Size()
-    fileBuffer := make([]byte, fileSize)
-    upFile.Read(fileBuffer)
-    
-    _, err = s3.New(session).PutObject(&s3.PutObjectInput{
-        Bucket:               aws.String(AWS_S3_BUCKET),
-        Key:                  aws.String(uploadFileDir),
-        ACL:                  aws.String("private"),
-        Body:                 bytes.NewReader(fileBuffer),
-        ContentLength:        aws.Int64(fileSize),
-        ContentType:          aws.String(http.DetectContentType(fileBuffer)),
-        ContentDisposition:   aws.String("attachment"),
-        ServerSideEncryption: aws.String("AES256"),
-    })
-    return err
-}
 
 func (us *userHandler) Login() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -93,16 +56,6 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 		file, err := c.FormFile("images")
 		if file != nil {
 
-			// session, err := session.NewSession(&aws.Config{Region: aws.String(AWS_S3_REGION)})
-			// if err != nil {
-			// 	log.Fatal(err)
-			// }
-		
-			// // Upload Files
-			// err = uploadFile(session, file.Filename)
-			// if err != nil {
-			// 	log.Fatal(err)
-			// }
 			input.Images = file.Filename
 		}
 
