@@ -1,0 +1,798 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Sosial Media API
+  description: Management Sosial Media
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/HERIBUDIYANA/Sosial-Media-API/1.0.0
+  - description: API server Gohub
+    url: http://52.77.251.146:80
+tags:
+  - name: Login
+  - name: Register
+  - name: User
+  - name: Post
+  - name: Comment
+paths:
+  /login:
+    post:
+      tags:
+        - "Login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+          # multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+            example:
+              username: budi_
+              password: password123
+      responses:
+        '200':
+          description: "success login"
+          content:
+            application/json:
+            # multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                  token:
+                    type: string
+              example:
+                message: "login successfull"
+                data:
+                  id: 1
+                  name: "budi_"
+                token: "12jfoajfidaskudsghusdhfijijwiruidf"
+
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+  /register:
+    post:
+      tags:
+        - "Register"
+      requestBody:
+        required: true
+        content:
+          application/json:
+          # multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                  format: password
+            example:
+              name : Budi
+              username: budi_
+              email: budi@gmail.com
+              password: budi123
+      responses:
+        '201':
+          description: "success register and create account"
+          content:
+            application/json:
+            # multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nama:
+                        type: string
+                        example: "Budi"
+
+        '400':
+          description: "register failed"
+          content:
+            application/json:
+            # multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "wrong input"
+        '500':
+          $ref: "#/components/responses/500"
+  /users: 
+      put:
+        tags:
+          - "User"
+        summary: update data user
+        description: update data user yang diinputkan oleh user itu sendiri
+        operationId: update data personal
+        # parameters:
+          # - in: path
+          #   name: id
+          #   schema:
+          #     type: integer
+          #   required: true
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+            # multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  images:
+                    type: string
+                  email:
+                    type: string
+                  password: 
+                    type: string
+                    format: password
+                  hp:
+                    type: string
+                  bio:
+                    type: string
+              example: 
+                name: "sarijem"
+                images: "sarijem-cute.jpg"
+                email: "sarijem@gmail.com"
+                password: "asdfg"
+                hp: "08777"
+                bio: "hanya untuk bersenag-senang"
+        responses:
+          '200':
+            description: success update data user
+            content:
+              application/json:
+              # multipart/form-data:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                  example: 
+                    message: "update data successful"
+          '400':
+            $ref: "#/components/responses/400"
+          '500':
+            $ref: "#/components/responses/500"
+      delete:
+        tags:
+          - "User"
+        summary: delete data user
+        description: delete akun user pribadi
+        # parameters:
+        #   - in: path
+        #     name: id
+        #     required: true
+        #     schema:
+        #       type: integer
+        security:
+          - bearerAuth: []
+        responses:
+          '200':
+            description: delete account user successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                  example: 
+                    message: "delete account successful"
+          '400':
+            $ref: "#/components/responses/400"
+          '500':
+            $ref: "#/components/responses/500" 
+  /users/{id}:
+    get:
+      tags:
+        - "User"
+      summary: mengambil data user
+      description: User dapat melihat data pribadi mereka sendiri
+      operationId: read data personal
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success get data user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data :
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      email:
+                        type: string
+              example:
+                message: "get data successful"
+                data:
+                  name: "Budi"
+                  email: "budi@gmail.com"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+    
+              # UPDATE USERS
+  
+  /posts:
+    summary: Mengambil data seluruh posting beserta comment yang dimiliki
+    get:
+      tags: 
+        - Post
+      summary: mengambil seluruh data postingan dan komentar
+      responses:
+        '200':
+          description: success get all posts and comment
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  post:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      images:
+                        type: string
+                      content:
+                        type: string
+                      createdat:
+                        type: string
+                        format: date
+                      updatedat:
+                        type:  string
+                        format: date
+                      comments:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            comment:
+                              type: string
+                            createdAt:
+                              type: string
+                              format: date
+                            updatedAt:
+                              type: string
+                              format: date
+              example:        
+                message: "success get all posts"
+                post: 
+                  - id: 11
+                    name: "Budi"
+                    images: "puncak.jpg"
+                    content: "Hari ini aku senang sekali bisa pergi liburan!"
+                    createdat: "2022/10/17"
+                    updatedat: "null"
+                    comment:
+                    - id: 1
+                      name: "Andi"
+                      comment: "Wah seru banget"
+                      createdAt: "2022/10/18"
+                      updatedAt: "null"
+                    - id: 2
+                      name: "Susi"
+                      comment: "Jadi pengen liburan juga"
+                      createdAt: "2022/10/19"
+                      updatedAt: "2022/10/20"
+                  - id: 15
+                    name: "sarijem"
+                    images: "aku-galau.jpg"
+                    content: "aku sangat butuh liburan komen dong tempat yang rekomen"
+                    createdat: "2022/10/17"
+                    updatedat: "2022/10/19"
+                    comment:
+                    - id: 12
+                      name: "dewi"
+                      comment: "lembang bandung kak seruu"
+                      createdAt: "2022/10/18"
+                      updatedAt: "null"
+                    - id: 21
+                      name: "ajeng"
+                      comment: "bromo keren kak pokoknya mantap"
+                      createdAt: "2022/10/19"
+                      updatedAt: "2022/10/20"
+                  - id: 17
+                    name: "surinem"
+                    images: "pemandangan-indah-sore.jpg"
+                    content: "di tempat ini aku menenangkan diri"
+                    createdat: "2022/10/17"
+                    updatedat: "2022/10/19"
+                    comment:
+                    - id: 13
+                      name: "ujang"
+                      comment: "spill tempatnya kak"
+                      createdAt: "2022/10/18"
+                      updatedAt: "null"
+                    - id: 28
+                      name: "euis"
+                      comment: "pengen kesana lagi"
+                      createdAt: "2022/10/19"
+                      updatedAt: "2022/10/20"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/400"
+  /myposts:
+    get:
+      tags:
+        - "Post"
+      summary: melihat postingan saya
+      responses:
+        '200':
+            description: success get all posts and comment
+            content:
+              aplication/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    post:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        user_id:
+                          type: integer
+                        name:
+                          type: string
+                        images:
+                          type: string
+                        content:
+                          type: string
+                        createdat:
+                          type: string
+                          format: date
+                        updatedat:
+                          type:  string
+                          format: date
+                example:        
+                  message: "success get all my posts"
+                  post: 
+                    - id: 2
+                      user_id: 11
+                      name: "Hery"
+                      images: "puncak.jpg"
+                      content: "Hari ini aku senang sekali bisa pergi liburan!"
+                      createdat: "2022/10/17"
+                      updatedat: "null"     
+                    - id: 5
+                      user_id: 11
+                      name: "Hery"
+                      images: "url-image.jpg"
+                      content: "paling enak ngopi di pinggir pantai"
+                      createdat: "2022/10/17"
+                      updatedat: "2022/10/20"
+                    - id: 90
+                      user_id: 11
+                      name: "Hery"
+                      images: "music-gitar.jpg"
+                      content: "di jual gitar yamaha ORI minus pemakaian"
+                      createdat: "2022/10/18"
+                      updatedat: "null"     
+                    - id: 23
+                      user_id: 11
+                      name: "Hery"
+                      images: "kawasaki-zx6r.jpg"
+                      content: "WTB kawasaki ZX-6R utamakan surat lengkap pajak panjang dana menyesuaikan"
+                      createdat: "2022/10/22"
+                      updatedat: "null"                               
+          # POSTING #
+    post:
+      tags:
+        - "Post"
+      summary: menambahkan postingan
+      description: insert postingan disini
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: string
+                content:
+                  type: string
+            example:
+              images: naruto-tangan-kosong.jpg
+              content: pada suatu hari naruto sangat marah karna pedangnya ilang 
+      responses:
+        '201':
+          description: success created posts
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  post:
+                    type: object
+                    properties:
+                      message:
+                        type: string        
+              example:        
+                message: "success created posts"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+          #UPDATE POST
+  /posts/{id}:
+    put: 
+      tags:
+        - "Post"
+      summary: Update postingan
+      description: update postingan disini
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+          # multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: string
+                content:
+                  type: string
+            example:
+              images: naruto-marah.jpg
+              content: suatu hari nanti pasti naruto menang walaupun tanpa pedang
+      responses:
+        '200':
+          description: success update posts
+          content:
+            application/json:
+            # multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example: 
+                  message: "update data successful"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500" 
+    delete:
+      tags:
+        - "Post"
+      summary: delete posts
+      description: delete your posts
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: delete post successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example: 
+                  message: "success delete posts"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+  /posts/comments/{id}:
+    get:
+      tags:
+        - "Post"
+      summary: get all comments by id post
+      description: get post with all comment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: success get all post and comment
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  post:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      comments:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            comment:
+                              type: string
+                            createdAt:
+                              type: string
+                              format: date
+                            updatedAt:
+                              type: string
+                              format: date
+              example:        
+                message: "success get detail post with comments"
+                post: 
+                  - id: 25
+                    comment:
+                      - id: 65
+                        name: "Patkai"
+                        comment: "sudahi sedihmu mending nonton one piece wkwk"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+                      - id: 77
+                        name: "Sun go kong"
+                        comment: "masih banyak janda kawan janganlah bersedih"
+                        createdAt: "2022/10/19"
+                        updatedAt: "2022/10/20"
+                      - id: 100
+                        name: "Liu Kang"
+                        comment: "lebih baik kita belajar fatality"
+                        createdAt: "2022/10/19"
+                        updatedAt: "2022/10/20"
+                      - id: 69
+                        name: "Kung Lao"
+                        comment: "tenang haruka sedang jomblo kok"
+                        createdAt: "2022/10/19"
+                        updatedAt: "2022/10/20"
+                      - id: 107
+                        name: "pokemon"
+                        comment: "jangan galau kawan mari kita begadang dan jalan malam"
+                        createdAt: "2022/10/18"
+                        updatedAt: "null"
+                      - id: 201
+                        name: "pikachu"
+                        comment: "kasian banget si"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+                      - id: 222
+                        name: "sakura"
+                        comment: "selamat siang"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+                      - id: 112
+                        name: "takiya genzie"
+                        comment: "tenang makise"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+                      - id: 212
+                        name: "makise"
+                        comment: "kamu jangan menyebut namaku disini genzieeehh"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+                      - id: 555
+                        name: "theodora"
+                        comment: "jurus sambergledegg"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+                      - id: 124
+                        name: "Zilong"
+                        comment: "Jurus Api"
+                        createdAt: "2022/10/19"
+                        updatedAt: "null"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"
+  
+  /comments/{id}:
+    post:
+      tags:
+        - "Comment"
+      summary: menambah komentar di salah satu postingan
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+          # multipart/form-data:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+            example:
+              comment: wihh keren mas 
+      responses:
+        '200':
+          description: "success add comment"
+          content:
+            application/json:
+            # multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "success add comment"
+        '400':
+          description: "add comment failed"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "wrong input"
+        '500':
+          $ref: "#/components/responses/500"
+    delete:
+      tags:
+        - "Comment"
+      summary: delete comment
+      description: delete your comment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: your comment deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example: 
+                  message: "success delete comment"
+        '400':
+          $ref: "#/components/responses/400"
+        '500':
+          $ref: "#/components/responses/500"        
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security sc
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserObject:
+      type: object
+      properties:
+        id:
+          type: integer
+        nama:
+          type: string
+        hp:
+          type: string
+        password:
+          type: string
+          format: password
+  
+  responses:
+    '400':
+      description: "error from user"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "cannot process data, invalid input from user"
+    '401':
+      description: Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "unauthorized access"
+    '500':
+      description: "error from server"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "cannot process data, something wrong on server"
