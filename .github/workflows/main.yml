@@ -38,4 +38,4 @@ jobs:
             docker stop gohub
             docker rm gohub
             docker rmi faturfawkes/gohub_img
-            docker run --name gohub --link mysql:3306 -d -p 80:80 faturfawkes/gohub_img
+            docker run --name gohub --link mysql:3306 -d -p 80:8000 faturfawkes/gohub_img
