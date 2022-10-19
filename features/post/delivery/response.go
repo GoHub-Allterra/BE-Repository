@@ -3,11 +3,13 @@ package delivery
 import "time"
 
 type GetAllPost struct {
-	ID       uint
-	User_ID  uint `json:"user_id" form:"user_id"`
-	Username string
-	Images   string
-	Content  string
+	ID         uint
+	User_ID    uint `json:"user_id" form:"user_id"`
+	Username   string
+	Images     string
+	Content    string
+	Created_At time.Time
+	Updated_At time.Time
 }
 
 type GetComments struct {

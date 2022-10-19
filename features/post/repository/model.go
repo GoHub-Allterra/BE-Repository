@@ -17,12 +17,12 @@ type Post struct {
 
 func (p *Post) ToDomain() domain.Post {
 	return domain.Post{
-		ID:      p.ID,
-		User_ID: p.User_ID,
-		Caption: p.Caption,
-		Images:  p.Images,
-		// Created_At: p.Created_At,
-		// Updated_At: p.Updated_At,
+		ID:         p.ID,
+		User_ID:    p.User_ID,
+		Caption:    p.Caption,
+		Images:     p.Images,
+		Created_At: p.CreatedAt,
+		Updated_At: p.UpdatedAt,
 	}
 }
 
@@ -31,23 +31,23 @@ func ToEntity(data domain.Post) Post {
 		User_ID: data.User_ID,
 		Caption: data.Caption,
 		Images:  data.Images,
-		// Created_At: data.Created_At,
-		// Updated_At: data.Updated_At,
+		// CreatedAt: data.Created_At,
+		// UpdatedAt: data.Updated_At,
 	}
 }
 
 func (dataPost *Post) toPostUser() domain.Post {
 
-	dataBookCore := domain.Post{
-		ID:      dataPost.ID,
-		User_ID: dataPost.User_ID,
-		Images:  dataPost.Images,
-		Caption: dataPost.Caption,
-		// Created_At: dataPost.Created_At,
-		// Updated_At: dataPost.Updated_At,
+	dataPostCore := domain.Post{
+		ID:         dataPost.ID,
+		User_ID:    dataPost.User_ID,
+		Images:     dataPost.Images,
+		Caption:    dataPost.Caption,
+		Created_At: dataPost.CreatedAt,
+		Updated_At: dataPost.UpdatedAt,
 	}
 
-	return dataBookCore
+	return dataPostCore
 
 }
 
