@@ -29,7 +29,7 @@ type GetResponse struct {
 	Email    string `json:"Email"`
 	HP       string `json:"hp"`
 	Bio      string `json:"bio"`
-	Images   string `json:"profile_picture"`
+	Images   string `json:"images"`
 }
 
 type LoginResponse struct {
