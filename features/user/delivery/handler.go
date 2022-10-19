@@ -1,12 +1,19 @@
 package delivery
 
 import (
+	"context"
 	"gohub/config"
 	"gohub/features/user/domain"
 	"gohub/middlewares"
+	"log"
 	"net/http"
 
 	"strconv"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -15,18 +22,40 @@ type userHandler struct {
 	srv domain.Service
 }
 
-
-
 func New(e *echo.Echo, srv domain.Service) {
 	handler := userHandler{srv: srv}
-	e.Static("/users/update", "./public")
 	e.POST("/login", handler.Login())                                                       // LOGIN USER
 	e.POST("/register", handler.AddUser())                                                  // REGISTER USER
-	e.GET("/users/:id", handler.GetUser())       // GET USER BY ID
+	e.GET("/users/:id", handler.GetUser())                                                  // GET USER BY ID
 	e.DELETE("/users", handler.DeleteUser(), middleware.JWT([]byte(config.JWT_SECRET)))     // DELETE USER BY ID
-	e.PUT("/users/update", handler.UpdateUser(), middleware.JWT([]byte(config.JWT_SECRET))) // UPDATE USER BY ID                                  // ADD PROFILE PHOTOS
+	e.PUT("/users", handler.UpdateUser(), middleware.JWT([]byte(config.JWT_SECRET))) // UPDATE USER BY ID                                  // ADD PROFILE PHOTOS
 }
 
+func upload(c echo.Context) (string, error) {
+
+	file, fileheader, err := c.Request().FormFile("images")
+	if err != nil {
+		log.Print(err)
+		return "", err
+	}
+
+	s3Config := &aws.Config{
+		Region:      aws.String("ap-southeast-1"),
+		Credentials: credentials.NewStaticCredentials("AKIATMRW76KP55SBRTVX", "RpiEcfYT9wiyTXsXT63F01ldTMcGAagmVRf2Z4ot", ""),
+	}
+	s3Session := session.New(s3Config)
+
+	uploader := s3manager.NewUploader(s3Session)
+
+	input := &s3manager.UploadInput{
+		Bucket:      aws.String("gohubalta"),   // bucket's name
+		Key:         aws.String("profile/"+fileheader.Filename), // files destination location
+		Body:        file,      // content of the file
+		ContentType: aws.String("image/jpg"),   // content type
+	}
+	res, err := uploader.UploadWithContext(context.Background(), input)
+	return res.Location, err
+}
 
 func (us *userHandler) Login() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -45,7 +74,6 @@ func (us *userHandler) Login() echo.HandlerFunc {
 	}
 }
 
-
 func (us *userHandler) UpdateUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input UpdateFormat
@@ -55,7 +83,11 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 
 		file, err := c.FormFile("images")
 		if file != nil {
-
+			res, err := upload(c)
+			if err != nil {
+				return err
+			}
+			log.Print(res)
 			input.Images = file.Filename
 		}
 
