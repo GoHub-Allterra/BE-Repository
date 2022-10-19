@@ -14,6 +14,13 @@ type Core struct {
 	Token    string
 }
 
+type PostCore struct {
+	ID      uint
+	UserID  uint
+	Images  string
+	Content string
+}
+
 type Repository interface { // Data /Repository (berhubungan dg DB)
 	Insert(newUser Core) (Core, error)
 	Get(ID uint) (Core, error)

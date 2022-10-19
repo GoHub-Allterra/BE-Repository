@@ -2,11 +2,14 @@ package database
 
 import (
 	"gohub/config"
+	posts "gohub/features/post/repository"
 	user "gohub/features/user/repository"
+
+	"fmt"
+
 	"github.com/labstack/gommon/log"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"fmt"
 )
 
 func InitDB(c *config.AppConfig) *gorm.DB {
@@ -31,4 +34,5 @@ func InitDB(c *config.AppConfig) *gorm.DB {
 
 func migrateDB(db *gorm.DB) {
 	db.AutoMigrate(&user.User{})
+	db.AutoMigrate(&posts.Post{})
 }
