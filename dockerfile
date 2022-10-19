@@ -1,5 +1,4 @@
 FROM golang:1.18
-ENV GOPROXY="https://goproxy.io"
 
 # buat folder app
 RUN mkdir /app
