@@ -14,7 +14,6 @@ type AppConfig struct {
 	DBPwd     string
 	DBHost    string
 	DBName    string
-	JWTSecret string
 }
 
 func NewConfig() *AppConfig {
@@ -46,7 +45,6 @@ func initConfig() *AppConfig {
 	}
 	app.DBPort = uint(port)
 	app.DBName = os.Getenv("DB_NAME")
-	app.JWTSecret = os.Getenv("JWT_SECRET")
 
 	return &app
 }
