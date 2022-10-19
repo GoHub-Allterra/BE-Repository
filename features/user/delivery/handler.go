@@ -1,14 +1,12 @@
 package delivery
 
 import (
-	"bytes"
 	"context"
-	"errors"
 	"gohub/config"
 	"gohub/features/user/domain"
 	"gohub/middlewares"
+	"log"
 	"net/http"
-	"os"
 
 	"strconv"
 
@@ -33,22 +31,17 @@ func New(e *echo.Echo, srv domain.Service) {
 	e.PUT("/users", handler.UpdateUser(), middleware.JWT([]byte(config.JWT_SECRET))) // UPDATE USER BY ID                                  // ADD PROFILE PHOTOS
 }
 
-func upload() error {
+func upload(c echo.Context) (string, error) {
 
-	var c echo.Context
-
-	file, err := c.FormFile("images")
+	file, fileheader, err := c.Request().FormFile("images")
 	if err != nil {
-		return err
+		log.Print(err)
+		return "", err
 	}
-
-	dat, err := os.ReadFile(file.Filename)
-
-	_, err = os.Open(file.Filename)
 
 	s3Config := &aws.Config{
 		Region:      aws.String("ap-southeast-1"),
-		Credentials: credentials.NewStaticCredentials("AKIATMRW76KPW44EZKGG", "g60Jw8F8Lh2ukLf7xUp8T3JaM+IS6qnpTzkNNu6C", ""),
+		Credentials: credentials.NewStaticCredentials("AKIATMRW76KP55SBRTVX", "RpiEcfYT9wiyTXsXT63F01ldTMcGAagmVRf2Z4ot", ""),
 	}
 	s3Session := session.New(s3Config)
 
@@ -56,12 +49,12 @@ func upload() error {
 
 	input := &s3manager.UploadInput{
 		Bucket:      aws.String("gohubalta"),   // bucket's name
-		Key:         aws.String(file.Filename), // files destination location
-		Body:        bytes.NewReader(dat),      // content of the file
+		Key:         aws.String("profile/"+fileheader.Filename), // files destination location
+		Body:        file,      // content of the file
 		ContentType: aws.String("image/jpg"),   // content type
 	}
-	_, err = uploader.UploadWithContext(context.Background(), input)
-	return err
+	res, err := uploader.UploadWithContext(context.Background(), input)
+	return res.Location, err
 }
 
 func (us *userHandler) Login() echo.HandlerFunc {
@@ -90,10 +83,11 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 
 		file, err := c.FormFile("images")
 		if file != nil {
-			err := upload()
+			res, err := upload(c)
 			if err != nil {
-				return errors.New("upload photo error")
+				return err
 			}
+			log.Print(res)
 			input.Images = file.Filename
 		}
 
