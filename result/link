@@ -1,9 +1,0 @@
-Alamat IP = http://13.213.62.76:8001
-
-GET(/user) -> Show All User
-POST(/user) -> Add User
-GET(/user/:id) -> Get single user
-Delete(/user?id=1) -> Delete user
-Put (/user?id=1) -> Update user
-
-Repository Github : https://github.com/FaturFawkes/deploy-user
