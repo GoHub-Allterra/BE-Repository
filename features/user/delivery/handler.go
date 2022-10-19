@@ -22,7 +22,7 @@ func New(e *echo.Echo, srv domain.Service) {
 	e.Static("/users/update", "./public")
 	e.POST("/login", handler.Login())                                                       // LOGIN USER
 	e.POST("/register", handler.AddUser())                                                  // REGISTER USER
-	e.GET("/users/:id", handler.GetUser(), middleware.JWT([]byte(config.JWT_SECRET)))       // GET USER BY ID
+	e.GET("/users/:id", handler.GetUser())       // GET USER BY ID
 	e.DELETE("/users", handler.DeleteUser(), middleware.JWT([]byte(config.JWT_SECRET)))     // DELETE USER BY ID
 	e.PUT("/users/update", handler.UpdateUser(), middleware.JWT([]byte(config.JWT_SECRET))) // UPDATE USER BY ID                                  // ADD PROFILE PHOTOS
 }
