@@ -1,7 +1,7 @@
 package database
 
 import (
-	"gohub/config"
+	// "gohub/config"
 	posts "gohub/features/post/repository"
 	user "gohub/features/user/repository"
 	"os"
@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitDB(c *config.AppConfig) *gorm.DB {
+func InitDB() *gorm.DB {
 	// str := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 	// 	c.DBUser,
 	// 	c.DBPwd,
