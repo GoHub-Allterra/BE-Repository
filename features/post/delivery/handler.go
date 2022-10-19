@@ -4,6 +4,8 @@ import (
 	"gohub/config"
 	"gohub/features/post/domain"
 	"gohub/middlewares"
+	"gohub/utils/helper"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -24,7 +26,7 @@ func New(e *echo.Echo, ps domain.PostUsecase) {
 
 	e.POST("/myposts", handler.AddPosting(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.GET("/posts", handler.SelectAll())
-	e.GET("/posts/:id", handler.SelectId())
+	e.GET("/posts/comments/:id", handler.SelectId())
 	e.GET("/myposts", handler.GetAllMyPosts(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.PUT("/posts/:id", handler.PutId(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.DELETE("/posts/:id", handler.DeletePosts(), middleware.JWT([]byte(config.JWT_SECRET)))
@@ -40,7 +42,7 @@ func (ph *postHandler) DeletePosts() echo.HandlerFunc {
 		row, errDel := ph.PostUsecase.DeletedPost(idProd, idFromToken)
 		if errDel != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"message": "failed",
+				"message": "failed server error",
 			})
 		}
 		if row != 1 {
@@ -49,7 +51,7 @@ func (ph *postHandler) DeletePosts() echo.HandlerFunc {
 			})
 		}
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success delete",
+			"message": "success delete posts",
 		})
 
 	}
@@ -73,6 +75,20 @@ func (ph *postHandler) PutId() echo.HandlerFunc {
 				"message": "failed bind data",
 			})
 		}
+
+		file, err := c.FormFile("images")
+		if file != nil {
+			res, err := helper.UploadPosts(c)
+			if err != nil {
+				return err
+			}
+			log.Print(res)
+			update.Images = res
+		}
+		if err != nil {
+			return err
+		}
+
 		var insert domain.Post
 		if update.Caption != "" {
 			insert.Caption = update.Caption
@@ -126,7 +142,7 @@ func (ph *postHandler) SelectAll() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success get all data",
+			"message": "success get all posts",
 			"data":    res,
 		})
 
@@ -160,15 +176,28 @@ func (ph *postHandler) AddPosting() echo.HandlerFunc {
 			})
 		}
 
-		cnv := ToDomain(input)
-		_, err := ph.PostUsecase.AddPost(cnv, id)
+		file, err := c.FormFile("images")
+		if file != nil {
+			res, err := helper.UploadPosts(c)
+			if err != nil {
+				return err
+			}
+			log.Print(res)
+			input.Images = res
+		}
 		if err != nil {
+			return err
+		}
+
+		cnv := ToDomain(input)
+		_, errposts := ph.PostUsecase.AddPost(cnv, id)
+		if errposts != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 				"message": "failed",
 			})
 		}
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success",
+		return c.JSON(http.StatusCreated, map[string]interface{}{
+			"message": "success created posts",
 		})
 	}
 }
