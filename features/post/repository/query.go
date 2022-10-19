@@ -82,6 +82,20 @@ func (pd *postData) GetById(param int) (domain.Post, error) {
 	postId := dataId.toPostUser()
 	return postId, nil
 }
+
+func (pd *postData) GetAllPostsByID(id uint) ([]domain.Post, error) {
+	var postData []domain.Post
+	pd.db.Where("user_id", id).Find(&postData)
+	if len(postData) < 1 {
+		return []domain.Post{}, errors.New("no postData found")
+	}
+
+	var userData domain.User
+	pd.db.Raw("SELECT name FROM users WHERE id = ?", id).Scan(&userData)
+
+	return postData, nil
+}
+
 func (pd *postData) PutPost(param, token int, dataUpdate domain.Post) (int, error) {
 	var dataCheck Post
 	tx := pd.db.First(&dataCheck, param)

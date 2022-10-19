@@ -25,6 +25,7 @@ func New(e *echo.Echo, ps domain.PostUsecase) {
 	e.POST("/myposts", handler.AddPosting(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.GET("/posts", handler.SelectAll())
 	e.GET("/posts/:id", handler.SelectId())
+	e.GET("/myposts", handler.GetAllMyPosts(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.PUT("/posts/:id", handler.PutId(), middleware.JWT([]byte(config.JWT_SECRET)))
 	e.DELETE("/posts/:id", handler.DeletePosts(), middleware.JWT([]byte(config.JWT_SECRET)))
 
@@ -123,11 +124,29 @@ func (ph *postHandler) SelectAll() echo.HandlerFunc {
 				"message": "failed get all data",
 			})
 		}
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"message": "success get all data",
 			"data":    res,
 		})
 
+	}
+}
+
+func (ph *postHandler) GetAllMyPosts() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := middlewares.ExtractToken(c)
+		respost, err := ph.PostUsecase.GetMyPosts(uint(id))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "error server",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success get all my posts",
+			"posts":   respost,
+		})
 	}
 }
 
