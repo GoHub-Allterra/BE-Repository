@@ -37,6 +37,7 @@ type PostUsecase interface {
 	AddPost(data Post, token int) (int, error)
 	SelectById(param int) (data Post, err error)
 	UpdatePost(param, token int, data Post) (int, error)
+	DeletedPost(param, token int) (int, error)
 }
 
 type PostData interface {
@@ -44,4 +45,5 @@ type PostData interface {
 	Insert(data Post, token int) (int, error)
 	GetById(param int) (data Post, err error)
 	PutPost(param, token int, data Post) (int, error)
+	DeletedId(param, token int) (int, error)
 }

@@ -59,3 +59,12 @@ func (ps *postUsecase) SelectById(param int) (domain.Post, error) {
 	return dataId, nil
 
 }
+
+func (ps *postUsecase) DeletedPost(param, token int) (int, error) {
+	row, err := ps.postData.DeletedId(param, token)
+	if err != nil || row == 0 {
+		return -1, err
+	}
+
+	return int(row), nil
+}

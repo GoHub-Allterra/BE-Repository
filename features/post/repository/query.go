@@ -17,6 +17,27 @@ func New(DB *gorm.DB) domain.PostData {
 	}
 }
 
+func (pd *postData) DeletedId(param, token int) (int, error) {
+
+	dataCart := Post{}
+	idCheck := pd.db.First(&dataCart, param)
+	if idCheck.Error != nil {
+		return 0, idCheck.Error
+	}
+	if uint(token) != dataCart.User_ID {
+		return -1, errors.New("you don't have access")
+	}
+	result := pd.db.Delete(&Post{}, param)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected != 1 {
+		return 0, errors.New("failed to delete data")
+	}
+	return int(result.RowsAffected), nil
+
+}
+
 func (pd *postData) Insert(data domain.Post, token int) (int, error) {
 	var datacheck domain.User
 	txcheck := pd.db.Where("ID=?", token).First(&datacheck)

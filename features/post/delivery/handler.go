@@ -26,7 +26,32 @@ func New(e *echo.Echo, ps domain.PostUsecase) {
 	e.GET("/posts", handler.SelectAll())
 	e.GET("/posts/:id", handler.SelectId())
 	e.PUT("/posts/:id", handler.PutId(), middleware.JWT([]byte(config.JWT_SECRET)))
+	e.DELETE("/posts/:id", handler.DeletePosts(), middleware.JWT([]byte(config.JWT_SECRET)))
 
+}
+
+func (ph *postHandler) DeletePosts() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		id := c.Param("id")
+		idProd, _ := strconv.Atoi(id)
+		idFromToken := middlewares.ExtractToken(c)
+		row, errDel := ph.PostUsecase.DeletedPost(idProd, idFromToken)
+		if errDel != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "failed",
+			})
+		}
+		if row != 1 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "failed delete",
+			})
+		}
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"message": "success delete",
+		})
+
+	}
 }
 
 func (ph *postHandler) PutId() echo.HandlerFunc {
