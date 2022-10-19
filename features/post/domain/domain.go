@@ -5,12 +5,14 @@ import (
 )
 
 type Post struct {
+	// gorm.Model
 	ID         uint
 	User_ID    uint      `json:"user_id" form:"user_id"`
 	Caption    string    `json:"caption" form:"caption"`
 	Images     string    `json:"images" form:"images"`
 	Created_At time.Time `json:"created_at" form:"created_at"`
 	Updated_At time.Time `json:"updated_at" form:"updated_at"`
+	// Deleted_at time.Time `json:"deleted_at" form:"deleted_at"`
 	// Post_images []string `json:"post_images" form:"post_images"`
 }
 
@@ -38,6 +40,7 @@ type PostUsecase interface {
 	SelectById(param int) (data Post, err error)
 	UpdatePost(param, token int, data Post) (int, error)
 	DeletedPost(param, token int) (int, error)
+	GetMyPosts(id uint) ([]Post, error)
 }
 
 type PostData interface {
@@ -46,4 +49,5 @@ type PostData interface {
 	GetById(param int) (data Post, err error)
 	PutPost(param, token int, data Post) (int, error)
 	DeletedId(param, token int) (int, error)
+	GetAllPostsByID(id uint) ([]Post, error)
 }

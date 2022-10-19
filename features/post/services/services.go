@@ -49,6 +49,11 @@ func (ps *postUsecase) GetAllPosts() ([]domain.Post, error) {
 	}
 }
 
+func (ps *postUsecase) GetMyPosts(id uint) ([]domain.Post, error) {
+	posts, err := ps.postData.GetAllPostsByID(id)
+	return posts, err
+}
+
 func (ps *postUsecase) SelectById(param int) (domain.Post, error) {
 
 	dataId, err := ps.postData.GetById(param)
