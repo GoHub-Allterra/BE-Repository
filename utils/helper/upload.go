@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -44,7 +45,7 @@ func UploadProfile(c echo.Context) (string, error) {
 
 	s3Config := &aws.Config{
 		Region:      aws.String("ap-southeast-1"),
-		Credentials: credentials.NewStaticCredentials("AKIATMRW76KP55SBRTVX", "RpiEcfYT9wiyTXsXT63F01ldTMcGAagmVRf2Z4ot", ""),
+		Credentials: credentials.NewStaticCredentials(os.Getenv("ACCESS_KEY_IAM"), os.Getenv("SECRET_KEY_IAM"), ""),
 	}
 	s3Session := session.New(s3Config)
 

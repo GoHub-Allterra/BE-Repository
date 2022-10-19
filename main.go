@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gohub/config"
+	// "gohub/config"
 	"gohub/features/user/delivery"
 	"gohub/features/user/repository"
 	"gohub/features/user/services"
@@ -18,8 +18,8 @@ import (
 
 func main() {
 	e := echo.New()
-	cfg := config.NewConfig()
-	db := database.InitDB(cfg)
+	// cfg := config.NewConfig()
+	db := database.InitDB()
 	uRepo := repository.New(db)
 	uService := services.New(uRepo)
 
