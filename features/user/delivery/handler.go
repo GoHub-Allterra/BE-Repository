@@ -68,7 +68,7 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, FailResponse("update user failed"))
 		}
-		return c.JSON(http.StatusOK, SuccessResponseNoData("update user successful"))
+		return c.JSON(http.StatusCreated, SuccessResponseNoData("update user successful"))
 	}
 }
 
