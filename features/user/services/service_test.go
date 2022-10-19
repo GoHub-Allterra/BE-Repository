@@ -27,7 +27,7 @@ func TestLogin(t *testing.T) {
 		input := domain.Core{Username: "fatur", Password: "fatur123"}
 		res, _, err := srv.Login(input)
 		assert.Empty(t, res)
-		assert.ErrorContains(t, err, "wrong password")
+		assert.EqualError(t, err, "wrong password")
 		repo.AssertExpectations(t)
 	})
 	t.Run("Wrong username Login", func(t *testing.T) {
@@ -65,7 +65,7 @@ func TestAddUser(t *testing.T) {
 		repo.On("Insert", mock.Anything).Return(domain.Core{}, errors.New("error add user")).Once()
 		srv := New(repo)
 		res, err := srv.AddUser(domain.Core{ID: 5, Name: "ian", HP: "08213"})
-		assert.ErrorContains(t, err, "database")
+		assert.EqualError(t, err, "error add user")
 		assert.Empty(t, res)
 	})
 }
