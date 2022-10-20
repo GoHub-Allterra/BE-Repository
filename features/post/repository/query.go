@@ -73,9 +73,9 @@ func (pd *postData) comment() []Comments {
 
 func (pd *postData) commentDikit() []Comments {
 	var dataComentUser []Comments
-	tx := pd.db.First(&dataComentUser)
+	tx := pd.db.Find(&dataComentUser)
 	if tx.Error != nil {
-		return nil
+		return []Comments{}
 	}
 
 	return dataComentUser
@@ -88,7 +88,6 @@ func (pd *postData) GetAll() ([]domain.Post, error) {
 	}
 
 	allComment := pd.commentDikit()
-
 	dataPostUser := toPostList(dataPost, allComment)
 
 	return dataPostUser, nil

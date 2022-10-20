@@ -66,7 +66,7 @@ func (ch *postHandler) AddComment() echo.HandlerFunc {
 			Comment: reqComment.Comment,
 		}
 
-		_, err = ch.PostUsecase.Insert(commentData)
+		_, err = ch.PostUsecase.Insert(commentData, id)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, err.Error())
 		}

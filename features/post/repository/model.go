@@ -49,10 +49,11 @@ func ToEntity(data domain.Post) Post {
 func (dataComentUser *Comments) toComentUser() domain.CommentsCore {
 
 	dataUser := domain.CommentsCore{
-		ID:      dataComentUser.ID,
-		User_ID: dataComentUser.User_ID,
-		Post_ID: dataComentUser.Post_ID,
-		Comment: dataComentUser.Comment,
+		ID:         dataComentUser.ID,
+		User_ID:    dataComentUser.User_ID,
+		Post_ID:    dataComentUser.Post_ID,
+		Comment:    dataComentUser.Comment,
+		Created_At: dataComentUser.CreatedAt,
 	}
 
 	return dataUser

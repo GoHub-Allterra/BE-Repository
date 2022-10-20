@@ -63,12 +63,3 @@ func ToDomain(u User) domain.Core {
 		Bio:      u.Bio,
 	}
 }
-
-// func ToDomainArray(au []User) []domain.Core {
-// 	var res []domain.Core
-// 	for _, val := range au {
-// 		res = append(res, domain.Core{ID: val.ID, Name: val.Name, Username: val.Name, Password: val.Password, Profile_picture: val.Profile_picture})
-// 	}
-
-// 	return res
-// }

@@ -25,17 +25,14 @@ func (ps *postUsecase) UpdatePost(param, token int, data domain.Post) (int, erro
 }
 
 func (ps *postUsecase) AddPost(data domain.Post, token int) (int, error) {
-	if data.Caption != "" {
 
-		add, err := ps.postData.Insert(data, token)
-		if err != nil || add == 0 {
-			return -1, err
-		} else {
-			return 1, nil
-		}
+	add, err := ps.postData.Insert(data, token)
+	if err != nil || add == 0 {
+		return -1, err
 	} else {
-		return -1, errors.New("all input data must be filled")
+		return 1, nil
 	}
+
 }
 
 func (ps *postUsecase) GetAllPosts() ([]domain.Post, error) {
