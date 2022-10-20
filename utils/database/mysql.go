@@ -38,7 +38,9 @@ package database
 import (
 	// "gohub/config"
 	"os"
+	// "fmt"
 	// "gohub/config"
+
 	comments "gohub/features/comments/repository"
 	posts "gohub/features/post/repository"
 	user "gohub/features/user/repository"
@@ -62,7 +64,6 @@ func InitDB() *gorm.DB {
 	str := os.Getenv("DB_USER") + ":" + os.Getenv("DB_PWD") + "@tcp(" + os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT") + ")/" + os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=True&loc=Local"
 
 	// str := fmt.Sprint("root:@tcp(127.0.0.1:3306)/gohub?charset=utf8mb4&parseTime=True&loc=Local")
-
 	// str := "root:@tcp(mysql:3306)/gohub?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(str), &gorm.Config{})

@@ -5,10 +5,17 @@ import (
 	"testing"
 )
 
-
-func AddPost(t *testing.T) {
+func TetstAddPost(t *testing.T) {
 	repo := mocks.NewRepository(t)
 	t.Run("sukses posting", func(t *testing.T) {
 		repo.On("")
 	})
+}
+
+func TestGetCommentByIdPosts(t *testing.T) {
+
+}
+
+func TestGetAll(t *testing.T) {
+
 }
