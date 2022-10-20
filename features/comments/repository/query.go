@@ -29,6 +29,7 @@ func (cd *commentData) AddComment(data domain.Comments) (domain.Comments, error)
 	}
 
 	return data, res.Error
+
 }
 func (cd *commentData) DeleteComent(param, token int) (int, error) {
 

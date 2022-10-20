@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "gohub/config"
 	"gohub/features/user/delivery"
 	"gohub/features/user/repository"
 	"gohub/features/user/services"
@@ -22,7 +21,6 @@ import (
 
 func main() {
 	e := echo.New()
-	// cfg := config.NewConfig()
 	db := database.InitDB()
 	uRepo := repository.New(db)
 	uService := services.New(uRepo)
@@ -41,5 +39,5 @@ func main() {
 	postDel.New(e, postS)
 	delivery.New(e, uService)
 
-	e.Logger.Fatal(e.Start(":8000"))
+	e.Logger.Fatal(e.Start(":8080"))
 }

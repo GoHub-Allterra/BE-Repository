@@ -69,6 +69,8 @@ func (ch *postHandler) AddComment() echo.HandlerFunc {
 		if err1 != nil {
 			return c.JSON(http.StatusInternalServerError, errors.New("error from server"))
 		}
+
 		return c.JSON(http.StatusCreated, map[string]string{"msg": "insert comment success"})
+
 	}
 }
