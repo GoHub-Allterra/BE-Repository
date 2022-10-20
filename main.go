@@ -39,5 +39,5 @@ func main() {
 	postDel.New(e, postS)
 	delivery.New(e, uService)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8000"))
 }
