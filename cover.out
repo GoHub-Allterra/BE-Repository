@@ -1,0 +1,20 @@
+mode: set
+gohub/features/post/services/services.go:12.49,16.2 1 1
+gohub/features/post/services/services.go:18.84,20.28 2 1
+gohub/features/post/services/services.go:24.2,24.15 1 1
+gohub/features/post/services/services.go:20.28,22.3 1 1
+gohub/features/post/services/services.go:27.74,30.28 2 1
+gohub/features/post/services/services.go:30.28,32.3 1 1
+gohub/features/post/services/services.go:32.8,34.3 1 1
+gohub/features/post/services/services.go:38.61,40.16 2 1
+gohub/features/post/services/services.go:40.16,42.3 1 1
+gohub/features/post/services/services.go:42.8,42.30 1 1
+gohub/features/post/services/services.go:42.30,44.3 1 1
+gohub/features/post/services/services.go:44.8,46.3 1 1
+gohub/features/post/services/services.go:49.67,52.2 2 1
+gohub/features/post/services/services.go:54.67,57.16 2 1
+gohub/features/post/services/services.go:61.2,61.20 1 1
+gohub/features/post/services/services.go:57.16,59.3 1 1
+gohub/features/post/services/services.go:65.67,67.28 2 1
+gohub/features/post/services/services.go:71.2,71.22 1 1
+gohub/features/post/services/services.go:67.28,69.3 1 1
