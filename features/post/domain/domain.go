@@ -12,6 +12,7 @@ type Post struct {
 	Images     string    `json:"images" form:"images"`
 	Created_At time.Time `json:"created_at" form:"created_at"`
 	Updated_At time.Time `json:"updated_at" form:"updated_at"`
+	Comment    []CommentsCore
 	// Deleted_at time.Time `json:"deleted_at" form:"deleted_at"`
 	// Post_images []string `json:"post_images" form:"post_images"`
 }
@@ -24,13 +25,14 @@ type User struct {
 	Bio      string `json:"bio" form:"bio"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
+	Post     []Post
 }
 
-type Comment struct {
+type CommentsCore struct {
 	ID         uint
 	User_ID    uint
 	Post_ID    uint
-	Caption    string `json:"caption" form:"caption"`
+	Comment    string `json:"comment" form:"comment"`
 	Created_At time.Time
 }
 
