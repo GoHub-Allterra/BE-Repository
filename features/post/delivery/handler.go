@@ -82,13 +82,14 @@ func (ph *postHandler) PutId() echo.HandlerFunc {
 			if err != nil {
 				return err
 			}
+			log.Print(res)
 			update.Images = res
 		}
 		if err != nil {
 			return err
 		}
 
-	
+		var insert domain.Post
 		if update.Caption != "" {
 			insert.Caption = update.Caption
 		}
