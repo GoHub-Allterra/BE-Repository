@@ -3,8 +3,8 @@ package delivery
 import "gohub/features/post/domain"
 
 type Request struct {
-	Caption string `json:"caption"`
-	Images  string `json:"images"`
+	Caption string `json:"caption" form:"caption"`
+	Images  string `json:"images" form:"images"`
 }
 
 func ToDomain(i interface{}) domain.Post {

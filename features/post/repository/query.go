@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"gohub/features/post/domain"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -80,6 +81,7 @@ func (pd *postData) commentDikit() []Comments {
 
 	return dataComentUser
 }
+
 func (pd *postData) GetAll() ([]domain.Post, error) {
 	var dataPost []Post
 	tx := pd.db.Find(&dataPost)
@@ -87,9 +89,11 @@ func (pd *postData) GetAll() ([]domain.Post, error) {
 		return nil, tx.Error
 	}
 
-	allComment := pd.commentDikit()
-	dataPostUser := toPostList(dataPost, allComment)
 
+	allComment := pd.comment()
+	dataPostUser := toPostList(dataPost, allComment)
+	log.Print(dataPost)
+	
 	return dataPostUser, nil
 }
 

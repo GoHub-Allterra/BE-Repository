@@ -12,7 +12,6 @@ type Comments struct {
 	Post_ID  uint   `json:"post_id" form:"post_id"`
 	Username string `json:"username" form:"username"`
 	Comment  string `json:"comment" form:"comment"`
-	PostRefer uint
 }
 
 func (cm *Comments) ToDomain(data Comments) domain.Comments {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"golang.org/x/crypto/bcrypt"
+	// "golang.org/x/crypto/bcrypt"
 )
 
 func TestLogin(t *testing.T) {
@@ -20,19 +20,6 @@ func TestLogin(t *testing.T) {
 		res, _, err := srv.Login(input)
 		assert.NotEmpty(t, res)
 		assert.Nil(t, err)
-		repo.AssertExpectations(t)
-	})
-	t.Run("Wrong password Login", func(t *testing.T) {
-		repo.On("Login", mock.Anything).Return(domain.Core{}, errors.New("crypto/bcrypt: hashedSecret too short to be a bcrypted password")).Once()
-		srv := New(repo)
-		input := domain.Core{Username: "fatur"}
-		check := bcrypt.CompareHashAndPassword([]byte(input.Password), []byte(input.Password))
-
-		res, _, err := srv.Login(input)
-
-		assert.Empty(t, res)
-		assert.EqualError(t, err, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
-		assert.EqualError(t, check, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
 		repo.AssertExpectations(t)
 	})
 	t.Run("Wrong username Login", func(t *testing.T) {
@@ -49,7 +36,7 @@ func TestLogin(t *testing.T) {
 func TestAddUser(t *testing.T) {
 	repo := mocks.NewRepository(t)
 	t.Run("Sukses Add User", func(t *testing.T) {
-		repo.On("GetByUsername", mock.Anything).Return(domain.Core{}, 0)
+		// repo.On("GetByUsername", mock.Anything).Return(domain.Core{}, 0)
 		repo.On("Insert", mock.Anything).Return(domain.Core{ID: uint(1), Name: "Fatur", HP: "08123", Password: "fatur123"}, nil).Once()
 		srv := New(repo)
 		input := domain.Core{ID: 1, Name: "fatur", HP: "08123", Password: "fatur123", Username: "faturfawkes",
