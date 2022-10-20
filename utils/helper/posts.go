@@ -22,13 +22,13 @@ var seededRandom *rand.Rand = rand.New(
 func autoGenerates(length int, charset string) string {
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
+		b[i] = charset[seededRandom.Intn(len(charset))]
 	}
 	return string(b)
 }
 
 func StrIng(length int) string {
-	return autoGenerate(length, charset)
+	return autoGenerates(length, charSet)
 }
 
 func UploadPosts(c echo.Context) (string, error) {
@@ -39,7 +39,7 @@ func UploadPosts(c echo.Context) (string, error) {
 		return "", err
 	}
 
-	randomStr := String(20)
+	randomStr := StrIng(20)
 
 	s3Config := &aws.Config{
 		Region:      aws.String("ap-southeast-1"),
