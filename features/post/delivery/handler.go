@@ -176,7 +176,7 @@ func (ph *postHandler) AddPosting() echo.HandlerFunc {
 			})
 		}
 
-		file, err := c.FormFile("images")
+		file, _ := c.FormFile("images")
 		if file != nil {
 			res, err := helper.UploadPosts(c)
 			if err != nil {
@@ -184,9 +184,6 @@ func (ph *postHandler) AddPosting() echo.HandlerFunc {
 			}
 			log.Print(res)
 			input.Images = res
-		}
-		if err != nil {
-			return err
 		}
 
 		cnv := ToDomain(input)
