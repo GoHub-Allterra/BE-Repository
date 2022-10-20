@@ -37,7 +37,7 @@ func (us *userHandler) Login() echo.HandlerFunc {
 		cnv := ToDomain(input)
 		res, token, err := us.srv.Login(cnv)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, FailResponse(err))
+			return c.JSON(http.StatusInternalServerError, FailResponse("login failed"))
 		}
 		res.Token = token
 		return c.JSON(http.StatusOK, SuccessResponseWithData("login successful", ToResponse(res, "login")))

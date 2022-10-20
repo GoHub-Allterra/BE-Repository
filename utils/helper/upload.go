@@ -72,7 +72,7 @@ func UploadPosts(c echo.Context) (string, error) {
 
 	s3Config := &aws.Config{
 		Region:      aws.String("ap-southeast-1"),
-		Credentials: credentials.NewStaticCredentials("ACCESS_KEY_IAM", "SECRET_KEY_IAM", ""),
+		Credentials: credentials.NewStaticCredentials(os.Getenv("ACCESS_KEY_IAM"), os.Getenv("SECRET_KEY_IAM"), ""),
 	}
 	s3Session := session.New(s3Config)
 
