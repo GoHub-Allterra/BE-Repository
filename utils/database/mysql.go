@@ -3,6 +3,7 @@ package database
 import (
 	// "gohub/config"
 	"os"
+	// "fmt"
 	posts "gohub/features/post/repository"
 	user "gohub/features/user/repository"
 
@@ -20,7 +21,7 @@ func InitDB() *gorm.DB {
 	// str := fmt.Sprint("root:@tcp(127.0.0.1:3306)/gohub?charset=utf8mb4&parseTime=True&loc=Local")
 	db, err := gorm.Open(mysql.Open(str), &gorm.Config{})
 	if err != nil {
-		log.Error("db config error :", err.Error())
+		log.Error("db config error :", err)
 		return nil
 	}
 	migrateDB(db)

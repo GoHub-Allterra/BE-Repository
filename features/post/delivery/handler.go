@@ -59,7 +59,10 @@ func (ph *postHandler) DeletePosts() echo.HandlerFunc {
 
 func (ph *postHandler) PutId() echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		var insert domain.Post
 		idToken := middlewares.ExtractToken(c)
+		
 		id := c.Param("id")
 		idConv, _ := strconv.Atoi(id)
 		if idConv < 0 {
@@ -82,20 +85,14 @@ func (ph *postHandler) PutId() echo.HandlerFunc {
 			if err != nil {
 				return err
 			}
-			log.Print(res)
 			update.Images = res
+			insert.Images = update.Images
 		}
-		if err != nil {
-			return err
-		}
-
-		var insert domain.Post
+	
 		if update.Caption != "" {
 			insert.Caption = update.Caption
 		}
-		if update.Images != "" {
-			insert.Images = update.Images
-		}
+
 		insert.ID = uint(idConv)
 		row, _ := ph.PostUsecase.UpdatePost(idConv, idToken, insert)
 		if row == 1 {
