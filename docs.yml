@@ -4,11 +4,11 @@ info:
   title: Sosial Media API
   description: Management Sosial Media
 servers:
+  - description: API server Gohub
+    url: http://52.77.235.98
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/HERIBUDIYANA/Sosial-Media-API/1.0.0
-  - description: API server Gohub
-    url: http://52.77.251.146:80
 tags:
   - name: Login
   - name: Register
@@ -247,11 +247,14 @@ paths:
                         type: string
                       email:
                         type: string
+                      images:
+                        type: string
               example:
                 message: "get data successful"
                 data:
                   name: "Budi"
                   email: "budi@gmail.com"
+                  images: "https://gohubalta.s3.ap-southeast-1.amazonaws.com/naruto-5818254__340.webp"
         '400':
           $ref: "#/components/responses/400"
         '500':
@@ -314,7 +317,7 @@ paths:
                 post: 
                   - id: 11
                     name: "Budi"
-                    images: "puncak.jpg"
+                    images: "https://gohubalta.s3.ap-southeast-1.amazonaws.com/naruto-5818254__340.webp"
                     content: "Hari ini aku senang sekali bisa pergi liburan!"
                     createdat: "2022/10/17"
                     updatedat: "null"
@@ -407,28 +410,28 @@ paths:
                     - id: 2
                       user_id: 11
                       name: "Hery"
-                      images: "puncak.jpg"
+                      images: "https://gohubalta.s3.ap-southeast-1.amazonaws.com/naruto-5818254__340.webpg"
                       content: "Hari ini aku senang sekali bisa pergi liburan!"
                       createdat: "2022/10/17"
                       updatedat: "null"     
                     - id: 5
                       user_id: 11
                       name: "Hery"
-                      images: "url-image.jpg"
+                      images: "https://gohubalta.s3.ap-southeast-1.amazonaws.com/naruto-5818254__340.webp"
                       content: "paling enak ngopi di pinggir pantai"
                       createdat: "2022/10/17"
                       updatedat: "2022/10/20"
                     - id: 90
                       user_id: 11
                       name: "Hery"
-                      images: "music-gitar.jpg"
+                      images: "https://gohubalta.s3.ap-southeast-1.amazonaws.com/naruto-5818254__340.webp"
                       content: "di jual gitar yamaha ORI minus pemakaian"
                       createdat: "2022/10/18"
                       updatedat: "null"     
                     - id: 23
                       user_id: 11
                       name: "Hery"
-                      images: "kawasaki-zx6r.jpg"
+                      images: "https://gohubalta.s3.ap-southeast-1.amazonaws.com/naruto-5818254__340.webp"
                       content: "WTB kawasaki ZX-6R utamakan surat lengkap pajak panjang dana menyesuaikan"
                       createdat: "2022/10/22"
                       updatedat: "null"                               

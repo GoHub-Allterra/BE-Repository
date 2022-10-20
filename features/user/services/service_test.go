@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func TestLogin(t *testing.T) {
@@ -22,12 +23,16 @@ func TestLogin(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 	t.Run("Wrong password Login", func(t *testing.T) {
-		repo.On("Login", mock.Anything).Return(domain.Core{Password: "asgfasg"}, errors.New("wrong password")).Once()
+		repo.On("Login", mock.Anything).Return(domain.Core{}, errors.New("crypto/bcrypt: hashedSecret too short to be a bcrypted password")).Once()
 		srv := New(repo)
-		input := domain.Core{Username: "fatur", Password: "fatur123"}
+		input := domain.Core{Username: "fatur"}
+		check := bcrypt.CompareHashAndPassword([]byte(input.Password), []byte(input.Password))
+
 		res, _, err := srv.Login(input)
+
 		assert.Empty(t, res)
-		assert.EqualError(t, err, "wrong password")
+		assert.EqualError(t, err, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
+		assert.EqualError(t, check, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
 		repo.AssertExpectations(t)
 	})
 	t.Run("Wrong username Login", func(t *testing.T) {
@@ -44,6 +49,7 @@ func TestLogin(t *testing.T) {
 func TestAddUser(t *testing.T) {
 	repo := mocks.NewRepository(t)
 	t.Run("Sukses Add User", func(t *testing.T) {
+		repo.On("GetByUsername", mock.Anything).Return(domain.Core{}, 0)
 		repo.On("Insert", mock.Anything).Return(domain.Core{ID: uint(1), Name: "Fatur", HP: "08123", Password: "fatur123"}, nil).Once()
 		srv := New(repo)
 		input := domain.Core{ID: 1, Name: "fatur", HP: "08123", Password: "fatur123", Username: "faturfawkes",
@@ -53,6 +59,7 @@ func TestAddUser(t *testing.T) {
 		assert.NotEmpty(t, res)
 		repo.AssertExpectations(t)
 	})
+
 	t.Run("Gagal Add User", func(t *testing.T) {
 		repo.On("Insert", mock.Anything).Return(domain.Core{}, errors.New("error add user")).Once()
 		srv := New(repo)
@@ -60,13 +67,6 @@ func TestAddUser(t *testing.T) {
 		assert.Empty(t, res)
 		assert.NotNil(t, err)
 		repo.AssertExpectations(t)
-	})
-	t.Run("Database error", func(t *testing.T) {
-		repo.On("Insert", mock.Anything).Return(domain.Core{}, errors.New("error add user")).Once()
-		srv := New(repo)
-		res, err := srv.AddUser(domain.Core{ID: 5, Name: "ian", HP: "08213"})
-		assert.EqualError(t, err, "error add user")
-		assert.Empty(t, res)
 	})
 }
 
