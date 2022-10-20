@@ -2,15 +2,14 @@ package delivery
 
 import "gohub/features/comments/domain"
 
-type Request struct {
-	Comment string `json:"comment"`
+type CommentFormat struct {
+	IdPost uint
+	IdUser uint
+	Comment string `json:"comment" form:"comment"`
+
 }
 
-func ToDomain(i interface{}) domain.Comments {
-	switch i.(type) {
-	case Request:
-		cnv := i.(Request)
-		return domain.Comments{Comment: cnv.Comment}
-	}
-	return domain.Comments{}
+func ToDomain(i CommentFormat) domain.Comments {
+	// var cnv CommentFormat
+	return domain.Comments{Comment: i.Comment, User_ID: i.IdUser, Post_ID: i.IdPost}
 }

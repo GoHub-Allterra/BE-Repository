@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gohub/features/comments/domain"
 
+	"github.com/labstack/gommon/log"
 	"gorm.io/gorm"
 )
 
@@ -18,13 +19,16 @@ func New(DB *gorm.DB) domain.DataInterface {
 }
 
 func (cd *commentData) AddComment(data domain.Comments) (domain.Comments, error) {
-	var commentData Comments = ToEntity(data)
-	err := cd.db.Create(&commentData).Error
-	if err != nil {
-		return domain.Comments{}, err
+	var input Comments
+	input = ToEntity(data)
+
+	res := cd.db.Create(&input)
+	if res.Error != nil {
+		log.Error("ERROR QUERY")
+		return domain.Comments{}, res.Error
 	}
 
-	return commentData.ToDomain(), nil
+	return data, res.Error
 }
 func (cd *commentData) DeleteComent(param, token int) (int, error) {
 

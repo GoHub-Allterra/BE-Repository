@@ -1,8 +1,10 @@
 package delivery
 
 import (
+	"errors"
 	"gohub/features/comments/domain"
 	"gohub/middlewares"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -48,32 +50,25 @@ func (ch *postHandler) DeleteCom() echo.HandlerFunc {
 }
 func (ch *postHandler) AddComment() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		param := c.Param("id")
-		var reqComment Request
-		if err := c.Bind(&reqComment); err != nil {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"message": "failed bind data",
-			})
-		}
-		id, err := strconv.Atoi(param)
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, "error get id")
+		var comment CommentFormat
+		id_post := c.Param("id")
+
+
+		if err := c.Bind(&comment); err != nil {
+			c.JSON(http.StatusBadRequest, errors.New("cannot bind data"))
 		}
 
-		var commentData domain.Comments = domain.Comments{
-			Post_ID: uint(id),
-			User_ID: uint(middlewares.ExtractToken(c)),
-			Comment: reqComment.Comment,
+		idUser := uint(middlewares.ExtractToken(c))
+		idCnv, _ := strconv.Atoi(id_post)
+		idPost := uint(idCnv)
+		comment.IdPost = idPost
+		comment.IdUser = idUser
+		data := ToDomain(comment)
+		log.Print(data)
+		_, err1 := ch.PostUsecase.Insert(data)
+		if err1 != nil {
+			return c.JSON(http.StatusInternalServerError, errors.New("error from server"))
 		}
-
-		_, err = ch.PostUsecase.Insert(commentData)
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, err.Error())
-		}
-
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success add comment",
-		})
-
+		return c.JSON(http.StatusCreated, map[string]string{"msg": "insert comment success"})
 	}
 }

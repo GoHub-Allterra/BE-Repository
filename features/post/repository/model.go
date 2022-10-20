@@ -12,9 +12,7 @@ type Post struct {
 	User_ID uint   `json:"user_id" form:"user_id"`
 	Images  string `json:"images" form:"images"`
 	Caption string `json:"caption" form:"caption"`
-	Comment []Comments
-	// Created_At time.Time `json:"created_at" form:"created_at"`
-	// Updated_At time.Time `json:"updated_at" form:"updated_at"`
+	Comments []Comments `gorm :"foreignKey:PostRefer"`
 }
 
 type Comments struct {

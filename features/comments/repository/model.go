@@ -12,18 +12,17 @@ type Comments struct {
 	Post_ID  uint   `json:"post_id" form:"post_id"`
 	Username string `json:"username" form:"username"`
 	Comment  string `json:"comment" form:"comment"`
-	// Created_At time.Time `json:"created_at" form:"created_at"`
-	// Updated_At time.Time `json:"updated_at" form:"updated_at"`
+	PostRefer uint
 }
 
-func (cm *Comments) ToDomain() domain.Comments {
+func (cm *Comments) ToDomain(data Comments) domain.Comments {
 	return domain.Comments{
-		ID:         cm.ID,
-		User_ID:    cm.User_ID,
-		Post_ID:    cm.Post_ID,
-		Username:   cm.Username,
-		Comment:    cm.Comment,
-		Created_At: cm.CreatedAt,
+		ID:         data.ID,
+		User_ID:    data.User_ID,
+		Post_ID:    data.Post_ID,
+		Username:   data.Username,
+		Comment:    data.Comment,
+		Created_At: data.CreatedAt,
 	}
 }
 
