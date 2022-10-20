@@ -12,6 +12,19 @@ type Comments struct {
 	Post_ID  uint   `json:"post_id" form:"post_id"`
 	Username string `json:"username" form:"username"`
 	Comment  string `json:"comment" form:"comment"`
+	// Posts    Posts
+	// Created_At time.Time `json:"created_at" form:"created_at"`
+	// Updated_At time.Time `json:"updated_at" form:"updated_at"`
+}
+type Posts struct {
+	gorm.Model
+	User_ID uint   `json:"user_id" form:"user_id"`
+	Caption string `json:"caption" form:"caption"`
+	Images  string `json:"images" form:"images"`
+	// Comments []Comments
+	// Post_ID  uint   `json:"post_id" form:"post_id"`
+	// Username string `json:"username" form:"username"`
+	// Comment  string `json:"comment" form:"comment"`
 	// Created_At time.Time `json:"created_at" form:"created_at"`
 	// Updated_At time.Time `json:"updated_at" form:"updated_at"`
 }

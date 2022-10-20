@@ -22,7 +22,7 @@ type Post struct {
 	Content    string    `json:"content" form:"content"`
 	Created_At time.Time `json:"created_at" form:"created_at"`
 	// User       User
-	Comment []Comments
+	// Comment []Comments
 }
 
 type User struct {
@@ -33,15 +33,15 @@ type User struct {
 	Bio      string `json:"bio" form:"bio"`
 	Email    string `json:"email" form:"email"`
 	Password string `json:"password" form:"password"`
-	Post     []Post
+	// Post     []Post
 }
 
 type DataInterface interface {
-	AddComment(data Comments) (Comments, error)
+	AddComment(data Comments, param int) (Comments, error)
 	DeleteComent(param, token int) (int, error)
 }
 
 type ServiceInterface interface {
-	Insert(data Comments) (Comments, error)
+	Insert(data Comments, param int) (Comments, error)
 	DeleteId(param, token int) (int, error)
 }

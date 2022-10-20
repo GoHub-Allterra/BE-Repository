@@ -14,8 +14,8 @@ func New(cd domain.DataInterface) domain.ServiceInterface {
 	}
 }
 
-func (cu *CommentUsecase) Insert(data domain.Comments) (domain.Comments, error) {
-	data, err := cu.commentData.AddComment(data)
+func (cu *CommentUsecase) Insert(data domain.Comments, param int) (domain.Comments, error) {
+	data, err := cu.commentData.AddComment(data, param)
 	return data, err
 }
 

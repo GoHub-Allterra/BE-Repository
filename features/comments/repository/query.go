@@ -17,14 +17,48 @@ func New(DB *gorm.DB) domain.DataInterface {
 	}
 }
 
-func (cd *commentData) AddComment(data domain.Comments) (domain.Comments, error) {
-	var commentData Comments = ToEntity(data)
-	err := cd.db.Create(&commentData).Error
-	if err != nil {
-		return domain.Comments{}, err
+func (cd *commentData) AddComment(data domain.Comments, param int) (domain.Comments, error) {
+	var datacheck domain.Comments
+	txcheck := cd.db.Where("ID=?", param).First(&datacheck)
+	if txcheck.Error != nil {
+		return domain.Comments{}, errors.New("error tx")
 	}
 
-	return commentData.ToDomain(), nil
+	if int(datacheck.ID) != param {
+		return datacheck, nil
+	}
+
+	dataModel := ToEntity(data)
+	dataModel.User_ID = uint(param)
+	tx := cd.db.Create(&dataModel)
+	if tx.Error != nil {
+		return domain.Comments{}, tx.Error
+	}
+
+	return datacheck, nil
+
+	//===============================
+	// var datacheck domain.Comments
+	// txcheck := cd.db.Where("ID=?", param).First(&datacheck)
+	// if txcheck.Error != nil {
+	// 	return domain.Comments{}, errors.New("error tx")
+	// }
+
+	// if int(datacheck.ID) != param {
+	// 	return datacheck, nil
+	// }
+
+	// var commentData Comments = ToEntity(data)
+	// err := cd.db.Create(&commentData).Error
+	// if err != nil {
+	// 	return domain.Comments{}, err
+	// }
+
+	// if int(commentData.ID) != param {
+	// 	return domain.Comments{}, nil
+	// }
+	// // return datacheck, nil
+	// return commentData.ToDomain(), nil
 }
 func (cd *commentData) DeleteComent(param, token int) (int, error) {
 
