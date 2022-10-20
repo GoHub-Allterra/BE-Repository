@@ -59,10 +59,9 @@ func (ph *postHandler) DeletePosts() echo.HandlerFunc {
 
 func (ph *postHandler) PutId() echo.HandlerFunc {
 	return func(c echo.Context) error {
-
 		var insert domain.Post
 		idToken := middlewares.ExtractToken(c)
-		
+
 		id := c.Param("id")
 		idConv, _ := strconv.Atoi(id)
 		if idConv < 0 {
@@ -79,7 +78,7 @@ func (ph *postHandler) PutId() echo.HandlerFunc {
 			})
 		}
 
-		file, err := c.FormFile("images")
+		file, _ := c.FormFile("images")
 		if file != nil {
 			res, err := helper.UploadPosts(c)
 			if err != nil {
@@ -88,7 +87,7 @@ func (ph *postHandler) PutId() echo.HandlerFunc {
 			update.Images = res
 			insert.Images = update.Images
 		}
-	
+
 		if update.Caption != "" {
 			insert.Caption = update.Caption
 		}
@@ -104,6 +103,7 @@ func (ph *postHandler) PutId() echo.HandlerFunc {
 				"message": "failed update data",
 			})
 		}
+
 	}
 }
 
@@ -187,7 +187,7 @@ func (ph *postHandler) AddPosting() echo.HandlerFunc {
 		_, errposts := ph.PostUsecase.AddPost(cnv, id)
 		if errposts != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"message": "failed",
+				"message": "failed todomain",
 			})
 		}
 		return c.JSON(http.StatusCreated, map[string]interface{}{

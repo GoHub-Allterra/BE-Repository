@@ -59,7 +59,27 @@ func (pd *postData) Insert(data domain.Post, token int) (int, error) {
 	return int(tx.RowsAffected), nil
 
 }
+func (pd *postData) comment() []Comments {
 
+	var dataComentUser []Comments
+	tx := pd.db.Find(&dataComentUser)
+	if tx.Error != nil {
+		return nil
+	}
+
+	return dataComentUser
+
+}
+
+func (pd *postData) commentDikit() []Comments {
+	var dataComentUser []Comments
+	tx := pd.db.First(&dataComentUser)
+	if tx.Error != nil {
+		return nil
+	}
+
+	return dataComentUser
+}
 func (pd *postData) GetAll() ([]domain.Post, error) {
 	var dataPost []Post
 	tx := pd.db.Find(&dataPost)
@@ -67,7 +87,9 @@ func (pd *postData) GetAll() ([]domain.Post, error) {
 		return nil, tx.Error
 	}
 
-	dataPostUser := toPostList(dataPost)
+	allComment := pd.commentDikit()
+
+	dataPostUser := toPostList(dataPost, allComment)
 
 	return dataPostUser, nil
 }
@@ -79,7 +101,8 @@ func (pd *postData) GetById(param int) (domain.Post, error) {
 		return domain.Post{}, tx.Error
 	}
 
-	postId := dataId.toPostUser()
+	allCom := pd.comment()
+	postId := dataId.toUserCore(allCom)
 	return postId, nil
 }
 
@@ -97,6 +120,7 @@ func (pd *postData) GetAllPostsByID(id uint) ([]domain.Post, error) {
 }
 
 func (pd *postData) PutPost(param, token int, dataUpdate domain.Post) (int, error) {
+
 	var dataCheck Post
 	tx := pd.db.First(&dataCheck, param)
 	if tx.Error != nil {
