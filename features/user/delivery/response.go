@@ -15,8 +15,8 @@ func SuccessResponseNoData(msg string) map[string]interface{} {
 	}
 }
 
-func FailResponse(msg string) map[string]string {
-	return map[string]string{
+func FailResponse(msg interface{}) map[string]interface{} {
+	return map[string]interface{}{
 		"message": msg,
 	}
 }
@@ -26,7 +26,7 @@ type GetResponse struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Password string `json:"Password"`
-	Email    string `json:"Email"`
+	Email    string `json:"email"`
 	HP       string `json:"hp"`
 	Bio      string `json:"bio"`
 	Images   string `json:"images"`

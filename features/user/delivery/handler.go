@@ -1,13 +1,13 @@
 package delivery
 
 import (
+	"errors"
 	"gohub/config"
 	"gohub/features/user/domain"
 	"gohub/middlewares"
 	"gohub/utils/helper"
 	"log"
 	"net/http"
-
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -31,13 +31,13 @@ func (us *userHandler) Login() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input LoginFormat
 		if err := c.Bind(&input); err != nil {
-			return c.JSON(http.StatusBadRequest, FailResponse("cannot bind data"))
+			return c.JSON(http.StatusBadRequest, FailResponse(errors.New("cannot bind data")))
 		}
 
 		cnv := ToDomain(input)
 		res, token, err := us.srv.Login(cnv)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, FailResponse("login failed"))
+			return c.JSON(http.StatusInternalServerError, FailResponse(err))
 		}
 		res.Token = token
 		return c.JSON(http.StatusOK, SuccessResponseWithData("login successful", ToResponse(res, "login")))
@@ -48,7 +48,7 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input UpdateFormat
 		if err := c.Bind(&input); err != nil {
-			return c.JSON(http.StatusBadRequest, FailResponse("cannot bind input"))
+			return c.JSON(http.StatusBadRequest, FailResponse(errors.New("cannot bind data")))
 		}
 
 		file, err := c.FormFile("images")
@@ -66,7 +66,7 @@ func (us *userHandler) UpdateUser() echo.HandlerFunc {
 		cnv := ToDomain(input)
 		_, err = us.srv.UpdateUser(cnv)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, FailResponse("update user failed"))
+			return c.JSON(http.StatusInternalServerError, FailResponse(err))
 		}
 		return c.JSON(http.StatusCreated, SuccessResponseNoData("update user successful"))
 	}
@@ -78,7 +78,7 @@ func (us *userHandler) DeleteUser() echo.HandlerFunc {
 		toUint := uint(id)
 		_, err := us.srv.DeleteUser(toUint)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, FailResponse("delete user failed"))
+			return c.JSON(http.StatusInternalServerError, FailResponse(err))
 		}
 		return c.JSON(http.StatusOK, SuccessResponseNoData("delete user successful"))
 	}
@@ -91,7 +91,7 @@ func (us *userHandler) GetUser() echo.HandlerFunc {
 		toUint := uint(cnvId)
 		res, err := us.srv.Get(toUint)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, FailResponse("user not found"))
+			return c.JSON(http.StatusInternalServerError, FailResponse(err))
 		}
 		return c.JSON(http.StatusOK, SuccessResponseWithData("get data berhasil", ToResponse(res, "get")))
 	}
@@ -101,12 +101,12 @@ func (us *userHandler) AddUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input RegisterFormat
 		if err := c.Bind(&input); err != nil {
-			return c.JSON(http.StatusBadRequest, FailResponse("cannot bind input"))
+			return c.JSON(http.StatusBadRequest, FailResponse(errors.New("cannot bind data")))
 		}
 		cnv := ToDomain(input)
 		_, err := us.srv.AddUser(cnv)
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, FailResponse(err.Error()))
+				return c.JSON(http.StatusInternalServerError, FailResponse("username has taken"))
 		}
 
 		return c.JSON(http.StatusCreated, SuccessResponseNoData("berhasil registrasi"))

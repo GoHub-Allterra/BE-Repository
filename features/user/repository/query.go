@@ -66,23 +66,12 @@ func (rq *repoQuery) Get(ID uint) (domain.Core, error) {
 	return res, nil
 }
 
-// func (rq *repoQuery) Login(user domain.Core) (domain.Core, error) {
-// 	var dest User
-// 	if err := rq.db.First(&dest, "username = ? AND password = ?", user.Username, user.Password).Error ;err != nil {
-// 		return domain.Core{}, err
-// 	}
-
-// 	res := ToDomain(dest)
-// 	return res, nil
-	
-// }
-
-// func (rq *repoQuery) GetAll() ([]domain.Core, error) {
-// 	var resQry []User
-// 	if err := rq.db.Find(&resQry).Error; err != nil {
-// 		return nil, err
-// 	}
-// 	// selesai dari DB
-// 	res := ToDomainArray(resQry)
-// 	return res, nil
-// }
+func (rq *repoQuery) GetByUsername(newUser domain.Core) (domain.Core, int) {
+	var input User
+	username := FromDomain(newUser)
+	if err := rq.db.First(&input, "username = ?", username.Username).RowsAffected; err > 0 {
+		return domain.Core{}, 1
+	}
+	final := ToDomain(input)
+	return final, 0
+}
